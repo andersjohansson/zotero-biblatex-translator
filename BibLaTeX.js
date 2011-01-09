@@ -5,7 +5,7 @@
 	"creator":"Simon Kornblith, Richard Karnesky and Anders Johansson",
 	"target":"bib",
 	"minVersion":"1.0.0b4.r1",
-	"maxVersion":"",
+	"maxVersion":"2.0.9",
 	"priority":100,
 	"inRepository":false,
 	"lastUpdated":"2011-01-05 15:38:00"
