@@ -2063,8 +2063,8 @@ function doExport() {
 		// create a unique citation key
 		var citekey = buildCiteKey(item, citekeys);
 		
-		// write citation key
-		Zotero.write((first ? "" : ",\n\n") + "@"+type+"{"+citekey);
+		// write citation key (removed the comma)
+		Zotero.write((first ? "" : "\n\n") + "@"+type+"{"+citekey);
 		first = false;
 		
 		for(var field in fieldMap) {
@@ -2183,10 +2183,11 @@ function doExport() {
 		}
 
 		//TODO Maybe this should use accessDate, which has to be manually set though?
-		if(item.dateAdded){
-			var dt = Zotero.Utilities.strToDate(item.dateAdded);
-			var date  = dt.year +"-"+  dt.month +"-"+ dt.day;
-			writeField("urldate",date);
+	        if(item.accessDate){
+		    writeField("urldate",item.accessDate);
+		    
+		} else if(item.dateAdded){
+			writeField("urldate",item.dateAdded.substr(0,10));
 		}
 
 		//TODO enable handling of ranges of Zotero 2.1
