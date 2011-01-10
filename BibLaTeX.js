@@ -2148,8 +2148,8 @@ function doExport() {
 			for each(var creator in item.creators) {
 				var creatorString = creator.lastName;
 
-				if (creator.firstName) {//is this ideal?
-					creatorString = creator.firstName + " " + creator.lastName;
+				if (creator.firstName) {
+					creatorString = creator.lastName + ", " + creator.firstName;
 				}
 
 				if (creator.creatorType == "editor") {
