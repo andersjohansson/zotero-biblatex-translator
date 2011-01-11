@@ -182,7 +182,7 @@ var zotero2biblatexTypeMap = {
 	"instantMessage":"misc",
 	"forumPost":"online",
 	"audioRecording":"audio",
-	"presentation":"unpuplished",
+	"presentation":"unpublished",
 	"videoRecording":"misc",
 	"tvBroadcast":"misc",
 	"radioBroadcast":"misc",
