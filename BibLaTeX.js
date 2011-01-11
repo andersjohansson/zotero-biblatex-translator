@@ -2127,6 +2127,10 @@ function doExport() {
 		  	   writeField("type", item.manuscriptType || item.thesisType || item.websiteType || item.presentationType || item.reportType);
 		  }
 
+	    if(item.presentationType){
+		writeField("howpublished", item.presentationType);
+	    }
+
 		//not really used in bl, but let's try to be complete
 		if(item.archiveLocation) {
 			var library=item.archiveLocation;
