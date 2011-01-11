@@ -2184,11 +2184,11 @@ function doExport() {
 
 		//TODO Maybe this should use accessDate, which has to be manually set though?
 	        if(item.accessDate){
-		    writeField("urldate",item.accessDate);
-		    
-		} else if(item.dateAdded){
-			writeField("urldate",item.dateAdded.substr(0,10));
-		}
+		    writeField("urldate",item.accessDate.substr(0,10));
+		  }
+	//	} else if(item.dateAdded){
+	//		writeField("urldate",item.dateAdded.substr(0,10));
+	//	}
 
 		//TODO enable handling of ranges of Zotero 2.1
 		if(item.date) {
