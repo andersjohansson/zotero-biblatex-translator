@@ -2209,7 +2209,18 @@ function doExport() {
 		
 		
 		if(item.extra) {
+		    if(item.extra.match("biblatexdata")){
+			var ex = item.extra.replace(/^.*biblatexdata\[|\].*$/g,"");
+			var blf = ex.split(";");
+			for each(var pair in blf){
+			    var ps=pair.split("=",2);
+			    writeField(ps[0],ps[1]);
+			}
+
+		    } else{
 			writeField("note", item.extra);
+		    }
+
 		}
 		
 		if(item.tags && item.tags.length) {
