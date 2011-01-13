@@ -2087,7 +2087,7 @@ function doExport() {
 			if(item.itemType == "bookSection" || item.itemType == "conferencePaper") {
 				writeField("booktitle", item.publicationTitle); //correct for biblatex,
 				//TODO: check what happens to bookTitle
-			} else {
+			} else { //TODO: tv-program titles get added here
 				writeField("journaltitle", item.publicationTitle); 
 			}
 		}
@@ -2127,8 +2127,10 @@ function doExport() {
 		  	   writeField("type", item.manuscriptType || item.thesisType || item.websiteType || item.presentationType || item.reportType);
 		  }
 
-	    if(item.presentationType){
-		writeField("howpublished", item.presentationType);
+
+
+	    if(item.presentationType || item.manuscriptType){
+		writeField("howpublished", item.presentationType || item.manuscriptType);
 	    }
 
 		//not really used in bl, but let's try to be complete
