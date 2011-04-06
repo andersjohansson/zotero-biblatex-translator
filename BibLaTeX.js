@@ -8,9 +8,9 @@
 	"maxVersion":"null",
 	"priority":100,
 	"inRepository":false,
+        "displayOptions":{"exportCharset":"UTF-8", "exportFileData":false},
         "configOptions":null,
-        "displayOptions":null,
-	"lastUpdated":"2011-03-24"
+	"lastUpdated":"2011-04-06"
 }
 
 //Is this correct in 2.1?
@@ -48,8 +48,9 @@ var fieldMap = {
     pagetotal:"numPages"
 };
 
-//"programTitle", "bookTitle" //handled below
-//	accessDate:"accessDate", //only written on attached webpage snapshots?
+//"programTitle", "bookTitle" //TODO, check!!
+// 
+//	accessDate:"accessDate", //only written on attached webpage snapshots by zotero?
 
 //	section:"section", //for what is this used in zotero?
 //	distributor:"distributor", //nothing eqivalent in bl
@@ -77,7 +78,6 @@ var fieldMap = {
 //	libraryCatalog:"libraryCatalog",
 //	videoRecordingFormat:"videoRecordingFormat",
 //	interviewMedium:"interviewMedium",
-//	mapType:"mapType",
 //	scale:"scale",
 //	audioRecordingFormat:"audioRecordingFormat",
 //	label:"label",
@@ -112,7 +112,9 @@ var fieldMap = {
 //	filingDate:"filingDate",
 //	genre:"genre",
 //	archive:"archive",
-
+//      websiteTitle ?
+//      forumTitle
+//      blogTitle
 
 
 var zotero2biblatexTypeMap = {
@@ -1729,8 +1731,8 @@ function doExport() {
 		//has to be made
 
 		//all kinds of numbers (biblatex has additional support for journal number != issue, but zotero has not)
-		if(item.reportNumber || item.seriesNumber || item.patentNumber || item.reportNumber || item.billNumber || item.episodeNumber) {
-			writeField("number", item.reportNumber || item.seriesNumber || item.patentNumber || item.reportNumber || item.billNumber || item.episodeNumber);
+		if(item.reportNumber || item.seriesNumber || item.patentNumber || item.reportNumber || item.billNumber || item.episodeNumber || item.number) {
+			writeField("number", item.reportNumber || item.seriesNumber || item.patentNumber || item.reportNumber || item.billNumber || item.episodeNumber|| item.number);
 		}
 
 
@@ -1774,8 +1776,8 @@ function doExport() {
 			}
 		} else if(item.itemType == "email"){
 		  writeField("type", "E-mail");
-		} else if(item.manuscriptType || item.thesisType || item.websiteType || item.presentationType || item.reportType) {
-		  	   writeField("type", item.manuscriptType || item.thesisType || item.websiteType || item.presentationType || item.reportType);
+		} else if(item.manuscriptType || item.thesisType || item.websiteType || item.presentationType || item.reportType || item.mapType) {
+		  	   writeField("type", item.manuscriptType || item.thesisType || item.websiteType || item.presentationType || item.reportType || item.mapType);
 		  }
 
 
@@ -1839,7 +1841,7 @@ function doExport() {
 			}
 		}
 
-		//TODO Maybe this should use accessDate, which has to be manually set though?
+		
 	        if(item.accessDate){
 		    writeField("urldate",item.accessDate.substr(0,10));
 		  }
