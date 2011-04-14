@@ -1731,8 +1731,14 @@ function doExport() {
 		if(item.publicationTitle) {
 			if(item.itemType == "bookSection" || item.itemType == "conferencePaper") {
 				writeField("booktitle", item.publicationTitle); //correct for biblatex,
-				//TODO: check what happens to bookTitle
-			} else { //TODO: tv-program titles get added here
+			} else if (item.itemType == "website" || item.itemType == "forumPost" || item.itemType == "blogPost") {
+			    //writeField("titleaddon", item.publicationTitle)
+			    //do nothing as websiteTitle, forumTitle, blogTitle seems
+			    //to be just aliases for publicationTitle and already
+			    //are correctly mapped
+			}
+//TODO: check what happens to bookTitle
+			 else { //TODO: tv-program titles get added here
 				writeField("journaltitle", item.publicationTitle); 
 			}
 		}
