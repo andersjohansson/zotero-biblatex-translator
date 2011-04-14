@@ -13,19 +13,13 @@
 	"lastUpdated":"2011-04-06"
 }
 
-//Is this correct in 2.1?
-//Zotero.configure("dataMode", "block");
-//Zotero.addOption("exportCharset", "UTF-8");
-//Zotero.addOption("exportFileData", false);
-
 
 //%a = first author surname
 //%y = year
 //%t = first word of title
 var citeKeyFormat = "%a_%t_%y";
 
-//Biblatex fieldnames as indices (to the left) zotero to the right
-//Things will change a bit in zotero 2.1. There will be origyear and stuff (which biblatex already has, but not in any standard styles though)
+
 var fieldMap = {
     location:"place",
     chapter:"chapter",
@@ -47,6 +41,7 @@ var fieldMap = {
     pages:"pages",
     pagetotal:"numPages"
 };
+//more conversions done below with special rules
 
 //"programTitle", "bookTitle" //TODO, check!!
 // 
@@ -112,9 +107,6 @@ var fieldMap = {
 //	filingDate:"filingDate",
 //	genre:"genre",
 //	archive:"archive",
-//      websiteTitle ?
-//      forumTitle
-//      blogTitle
 
 
 var zotero2biblatexTypeMap = {
@@ -144,7 +136,7 @@ var zotero2biblatexTypeMap = {
 	"forumPost":"online",
 	"audioRecording":"audio",
 	"presentation":"unpublished",
-	"videoRecording":"misc",
+	"videoRecording":"video",
 	"tvBroadcast":"misc",
 	"radioBroadcast":"misc",
 	"podcast":"audio",
@@ -1747,6 +1739,10 @@ function doExport() {
 	
 		if(item.encyclopediaTitle || item.dictionaryTitle || item.proceedingsTitle) {
 			writeField("booktitle",item.encyclopediaTitle || item.dictionaryTitle || item.proceedingsTitle);
+		}
+
+		if(item.websiteTitle || item.forumTitle || item.blogTitle) {
+			writeField("titleaddon", item.websiteTitle || item.forumTitle || item.blogTitle);
 		}
 		
 		//don't really know if this is the best way
