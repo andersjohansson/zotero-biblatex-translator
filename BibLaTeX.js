@@ -1570,7 +1570,8 @@ function writeField(field, value, isMacro) {
 		// I hope these are all the escape characters!
 		value = value.replace(/[|\<\>\~\^\\]/g, mapEscape).replace(/([\#\$\%\&\_])/g, "\\$1");
 		// Case of words with uppercase characters in non-initial positions is preserved with braces.
-		if(!isMacro&&field != "pages") value = value.replace(/([^\s]+[A-Z][^\s]*)/g, "{$1}");
+//		if(!isMacro&&field != "pages") value = value.replace(/([^\s]+[A-Z][^\s]*)/g, "{$1}");
+//I don't think biblatex cares!
 	}
 	if (Zotero.getOption("exportCharset") != "UTF-8") {
 		value = value.replace(/[\u0080-\uFFFF]/g, mapAccent);
@@ -1788,8 +1789,6 @@ function doExport() {
 	    writeField("type", item.manuscriptType || item.thesisType || item.websiteType || item.presentationType || item.reportType || item.mapType);
 	}
 
-
-
 	if(item.presentationType || item.manuscriptType){
 	    writeField("howpublished", item.presentationType || item.manuscriptType);
 	}
@@ -1806,47 +1805,74 @@ function doExport() {
 	if(item.creators && item.creators.length) {
 	    // split creators into subcategories
 	    var author = "";
-	    var editor = "";
-	    var translator = "";
-	    //added in biblatex: (the only straightforward ones, could also use editortype etc.
-	    //  for additional creators but that isn't used by standard styles in bl anyway)
-	    var commenter = "";
 	    var bookauthor = "";
-	    for each(var creator in item.creators) {
-		var creatorString = creator.lastName;
+	    var commentator = "";
+	    var editor = "";
+	    var editora = "";
+	    var editorb = "";
+	    var holder = "";
+	    var translator = "";
 
-		if (creator.firstName) {
+	    for each(var creator in item.creators) {
+		//var creatorString = creator.lastName;
+
+		if (creator.firstName && creator.lastName) {
 		    creatorString = creator.lastName + ", " + creator.firstName;
+		//below to preserve possible corporate creators (biblatex 1.4a manual 2.3.3)
+		} else if (creator.lastName && !creator.firstName) {
+		    creatorString = "{" + creator.lastName + "}";
+		} else if (creator.firstName && !creator.lastName) {
+		    creatorString = "{" + creator.firstName + "}";
 		}
 
-		if (creator.creatorType == "editor") {
-		    editor += " and "+creatorString;
-		} else if (creator.creatorType == "translator") {
-		    translator += " and "+creatorString;
-		} else if (creator.creatorType == "commenter") {
-		    commenter += " and "+creatorString;
+		if (creator.creatorType == "author" || creator.creatorType == "interviewer" || creator.creatorType == "director" || creator.creatorType == "programmer" || creator.creatorType == "artist" || creator.creatorType == "podcaster") {
+		    author += " and "+creatorString;
 		} else if (creator.creatorType == "bookAuthor") {
 		    bookauthor += " and "+creatorString;
-		} else {// collaborators etc. get put here, not optional
-		    author += " and "+creatorString;
+		} else if (creator.creatorType == "commenter") {
+		    commentator += " and "+creatorString;
+		} else if (creator.creatorType == "editor") {
+		    editor += " and "+creatorString;
+		} else if (creator.creatorType == "inventor") {
+		    holder += " and "+creatorString;
+		} else if (creator.creatorType == "translator") {
+		    translator += " and "+creatorString;
+		} else if (creator.creatorType == "seriesEditor") {//let's call them redacors
+		    editorb = +" and "+creatorString;
+		} else {// the rest into editora with editoratype = collaborator
+		    editora += " and "+creatorString;
 		}
 	    }
 	    
+	    //remove first " and " string
 	    if(author) {
 		writeField("author", author.substr(5));
-	    }
-	    if(editor) {
-		writeField("editor", editor.substr(5));
-	    }
-	    if(translator) {
-		writeField("translator", translator.substr(5));
-	    }
-	    if(commenter) {
-		writeField("commentator", commenter.substr(5)); //called commentator in bl
 	    }
 	    if(bookauthor) {
 		writeField("bookauthor", bookauthor.substr(5));
 	    }
+	    if(commentator) {
+		writeField("commentator", commenter.substr(5)); 
+	    }
+	    if(editor) {
+		writeField("editor", editor.substr(5));
+	    }
+	    if(editora) {
+		writeField("editora", editora.substr(5));
+		writeField("editoratype", "collaborator");
+	    }
+	    if(editorb) {
+		writeField("editorb", editorb.substr(5));
+		writeField("editorbtype", "redactor");
+	    }
+	    if(holder) {
+		writeField("holder", holder.substr(5));
+	    }
+	    if(translator) {
+		writeField("translator", translator.substr(5));
+	    }
+
+
 	}
 
 	
@@ -1857,7 +1883,7 @@ function doExport() {
 	//		writeField("urldate",item.dateAdded.substr(0,10));
 	//	}
 
-	//TODO enable handling of ranges of Zotero 2.1
+	//TODO enable handling of ranges of Zotero 2.1 (are they there?)
 	if(item.date) {
 	    writeField("date",item.date); //biblatex is smart, so this works (but not with ranges)
 	    //			var date = Zotero.Utilities.strToDate(item.date);
@@ -1894,17 +1920,7 @@ function doExport() {
 	    writeField("keywords", tagString.substr(2));
 	}
 	
-	//not needed for bl
-	//		if(item.pages) {
-	//			writeField("pages", item.pages.replace("-","--"));
-	//		}
 	
-	
-	//biblatex is better than this
-	//if(item.itemType == "webpage") {
-	//	writeField("howpublished", item.url);
-	//}
-
 	if (item.notes) {
 	    for each (var note in item.notes) {
 		writeField("annote", note["note"]);
