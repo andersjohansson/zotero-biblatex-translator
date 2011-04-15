@@ -1551,7 +1551,8 @@ var alwaysMap = {
 	">":"{\\textgreater}",
 	"~":"{\\textasciitilde}",
 	"^":"{\\textasciicircum}",
-	"\\":"{\\textbackslash}"
+	"\\":"\\"
+//	"\\":"{\\textbackslash}"
 };
 
 
