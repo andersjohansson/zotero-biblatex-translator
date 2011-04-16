@@ -1733,7 +1733,7 @@ function doExport() {
 	if(item.publicationTitle) {
 	    if(item.itemType == "bookSection" || item.itemType == "conferencePaper") {
 		writeField("booktitle", item.publicationTitle); //correct for biblatex,
-	    } else if (item.itemType == "journalArticle"){
+	    } else if (item.itemType == "journalArticle" || item.itemType == "magazineArticle" || item.itemType == "newspaperArticle"){
 		writeField("journaltitle", item.publicationTitle);
 	    }
 	    else if (item.itemType == "website" || item.itemType == "forumPost" || item.itemType == "blogPost" || item.itemType == "tvBroadcast" || item.itemType == "radioBroadcast") {
