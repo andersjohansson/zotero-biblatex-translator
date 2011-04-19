@@ -1826,7 +1826,7 @@ function doExport() {
 		    creatorString = "{" + creator.firstName + "}";
 		}
 
-		if (creator.creatorType == "author" || creator.creatorType == "interviewer" || creator.creatorType == "director" || creator.creatorType == "programmer" || creator.creatorType == "artist" || creator.creatorType == "podcaster") {
+		if (creator.creatorType == "author" || creator.creatorType == "interviewer" || creator.creatorType == "director" || creator.creatorType == "programmer" || creator.creatorType == "artist" || creator.creatorType == "podcaster" || creator.creatorType == "presenter") {
 		    author += " and "+creatorString;
 		} else if (creator.creatorType == "bookAuthor") {
 		    bookauthor += " and "+creatorString;
