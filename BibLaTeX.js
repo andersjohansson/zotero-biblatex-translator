@@ -9,11 +9,12 @@
     "priority":100,
     "inRepository":false,
     "displayOptions": {
-	"exportCharset": "UTF-8",
-	"exportNotes": true,
-	"exportFileData": false
+		"exportCharset": "UTF-8",
+		"exportNotes": false,
+		"exportFileData": false,
+		"useJournalAbbreviation": false
     },
-    "lastUpdated":"2012-09-25 16:32"
+    "lastUpdated":"2013-01-04 18:00"
 }
 
 
@@ -101,8 +102,9 @@ var alwaysMap = {
 	">":"{\\textgreater}",
 	"~":"{\\textasciitilde}",
 	"^":"{\\textasciicircum}",
-	"\\":"\\"
-//	"\\":"{\\textbackslash}"
+	"\\":"{\\textbackslash}",
+	"{" : "\\{",
+	"}" : "\\}"
 };
 
 
@@ -110,23 +112,41 @@ var alwaysMap = {
 
 // some fields are, in fact, macros.  If that is the case then we should not put the
 // data in the braces as it will cause the macros to not expand properly
-function writeField(field, value, isMacro) {
+function writeField(field, value, isMacro, noEscape) {
 	if(!value && typeof value != "number") return;
 	value = value + ""; // convert integers to strings
-	Zotero.write(",\n\t"+field+" = ");
-	if(!isMacro) Zotero.write("{");
+	Zotero.write(",\n\t" + field + " = ");
+	if (!isMacro) Zotero.write("{");
 	// url field is preserved, for use with \href and \url
 	// Other fields (DOI?) may need similar treatment
-	if(!((field == "url") || (field == "doi") | (field == "file"))) {
-
-		// I hope these are all the escape characters!
-		value = value.replace(/[|\<\>\~\^\\]/g, mapEscape).replace(/([\#\$\%\&\_])/g, "\\$1");
+	if (!noEscape && !isMacro && !(field == "url" || field == "doi" || field == "file" || field == "lccn")) {
+		//var titleCase = isTitleCase(value);	//figure this out before escaping all the characters
+		// I hope these are all the escape characters! (except for < > which are handled later)
+		value = value.replace(/[|\~\^\\\{\}]/g, mapEscape).replace(/[\#\$\%\&\_]/g, "\\$&");
+		//convert the HTML markup allowed in Zotero for rich text to TeX
+		value = mapHTMLmarkup(value);
+		//escape < > if mapHTMLmarkup did not convert some
+		value = value.replace(/[<>]/g, mapEscape);
+		
+		/*
+		if (field == "title" || field == "type" || field == "shorttitle" || field == "booktitle" || field == "series") {
+			if (!titleCase) {
+				//protect caps for everything but the first letter
+					value = value.replace(/(.)([A-Z]+)/g, "$1{$2}");
+			} else {	//protect all-caps vords and initials
+				value = value.replace(/([\s.->])([A-Z]+)(?=\.)/g, "$1{$2}");	//protect initials
+				if(value.toUpperCase() != value) value = value.replace(/([\s>])([A-Z]{2,})(?=[\.,\s<]|$)/g, "$1{$2}");
+			}
+		}
+		*/	
+			
 		// Case of words with uppercase characters in non-initial positions is preserved with braces.
 		// treat hyphen as whitespace for this purpose so that Large-scale etc. don't get enclosed
 		// treat curly bracket as whitespace because of mark-up immediately preceding word
-		if(!isMacro&&field != "pages") value = value.replace(/([^\s-\}]+[A-Z][^\s,]*)/g, "{$1}");
-		//convert the HTML markup allowed in Zotero for rich text to TeX
-		value = mapHTMLmarkup(value);
+		// treat opening parentheses &brackets as whitespace	
+		 if (field != "pages") {
+			value = value .replace(/[^\s-\}\{\(\[]+[A-Z][^\s,]*/g, "{$&}");
+		}
 	}
         //drop the crap and force UTF-8
 	//if (Zotero.getOption("exportCharset") != "UTF-8") {
@@ -134,22 +154,135 @@ function writeField(field, value, isMacro) {
 	//}
        
 	Zotero.write(value);
-	if(!isMacro) Zotero.write("}");
+	if (!isMacro) Zotero.write("}");
+}
+
+function mapHTMLmarkup(characters) {
+	//convert string to DOM
+	var dom = (new DOMParser()).parseFromString(characters, 'text/html');
+	return DOMtoTeX(dom.body);
 }
 
 
-function mapHTMLmarkup(characters){
-	//converts the HTML markup allowed in Zotero for rich text to TeX
-	//since  < and > have already been escaped, we need this rather hideous code - I couldn't see a way around it though.
-	//italics and bold
-	characters = characters.replace(/\{\\textless\}i\{\\textgreater\}(((?!\{\\textless\}\/i{\\textgreater\}).)+)\{\\textless\}\/i{\\textgreater\}/, "\\textit{$1}").replace(/\{\\textless\}b\{\\textgreater\}(((?!\{\\textless\}\/b{\\textgreater\}).)+)\{\\textless\}\/b{\\textgreater\}/g, "\\textbf{$1}");
-	//sub and superscript
-	characters = characters.replace(/\{\\textless\}sup\{\\textgreater\}(((?!\{\\textless\}\/sup\{\\textgreater\}).)+)\{\\textless\}\/sup{\\textgreater\}/g, "\$^{\\textrm{$1}}\$").replace(/\{\\textless\}sub\{\\textgreater\}(((?!\{\\textless\}\/sub\{\\textgreater\}).)+)\{\\textless\}\/sub\{\\textgreater\}/g, "\$_{\\textrm{$1}}\$");
-	//two variants of small caps
-	characters = characters.replace(/\{\\textless\}span\sstyle=\"small\-caps\"\{\\textgreater\}(((?!\{\\textless\}\/span\{\\textgreater\}).)+)\{\\textless\}\/span{\\textgreater\}/g, "\\textsc{$1}").replace(/\{\\textless\}sc\{\\textgreater\}(((?!\{\\textless\}\/sc\{\\textgreater\}).)+)\{\\textless\}\/sc\{\\textgreater\}/g, "\\textsc{$1}");
-	return characters;
+var HTMLtoTeXMap = {
+	i: {
+		open: "\\textit{",
+		close: "}"
+	},
+	b: {
+		open: "\\textbf{",
+		close: "}"
+	},
+	sup: {
+		open: "\$^{\\textrm{",
+		close: "}}\$"
+	},
+	sub: {
+		open: "\$_{\\textrm{",
+		close: "}}\$"
+	},
+	span: {
+		open: "\\textsc{",
+		close: "}"
+	},
+	sc: {
+		open: "\\textsc{",
+		close: "}"
+	}
 }
 
+function DOMtoTeX(element) {
+	
+	
+	
+	var str = "";
+	var node = element.firstChild;
+	if(!node) return str;
+
+	do {
+		var nodeName = node.nodeName.toLowerCase();
+		//nodes we can handle
+		if(HTMLtoTeXMap[nodeName]) {
+			//span element must have style="small-caps"
+			if(nodeName != 'span'
+				|| (node.style && node.style.fontVariant == 'small-caps')) {
+				str += HTMLtoTeXMap[nodeName].open
+							+ DOMtoTeX(node)
+							+ HTMLtoTeXMap[nodeName].close;
+				continue;
+			}
+		}
+
+		//text nodes get appended directly
+		if(nodeName == '#text') {
+			str += node.textContent;
+			continue;
+		}
+
+		//otherwise we dig deeper, but we don't mess with the node tags
+		var outerHTML = node.outerHTML;
+		var openningTag = outerHTML.substring(0, outerHTML.indexOf(node.innerHTML));
+		var closingTag = outerHTML.substring(openningTag.length + node.innerHTML.length);
+		str += openningTag + DOMtoTeX(node) + closingTag;
+	} while(node = node.nextSibling);
+	return str;
+}
+
+function mapTeXmarkup(tex){
+	//put in a safeguard against infinite loop and to deal with capital escaping.
+	var i = 0;
+	while(tex.search(/[^\\]\{.*[^\\]\}/)!=-1  && i<10 ){
+		tex = tex.replace(/\\textit\{([^\{\}]*)\}/g, "<i>$1</i>").replace(/\\textbf\{([^\{\}]*)\}/g, "<b>$1</b>");	
+		tex = tex.replace(/\$[^\{\$\}]*_\{([^\{\}]*)\}\$/g, "<sub>$1</sub>").replace(/\$[^\{\}\$]*_\{\\textrm\{([^\{\}]+)\}\}\$/g, "<sub>$1</sub>");	
+		tex = tex.replace(/\$[^\{\}\$]*\^\{([^\{\}]*\})\$/g, "<sup>$1</sup>").replace(/\$[^\{\}\$]*\^\{\\textrm\{([^\{\}]*)\}\}\$/g, "<sup>$1</sup>");
+		tex = tex.replace(/\\textsc\{([^\{\}]+)/g, "<span style=\"small-caps\">$1</span>");
+		//we go for a minimum of 4 levels of nesting before getting rid of additional brackets
+		//we do need to remove the brackets here for the code above to work with preserved caps
+		if (i>3) tex = tex.replace(/\{([^\{\}]*[^\\])\}/g, "$1"); 
+		i++;
+	}
+	return tex;
+}
+
+/*
+var skipWords = ["but", "or", "yet", "so", "for", "and", "nor",
+	"a", "an", "the", "at", "by", "from", "in", "into", "of", "on",
+	"to", "with", "up", "down", "as", "while", "aboard", "about",
+	"above", "across", "after", "against", "along", "amid", "among",
+	"anti", "around", "as", "before", "behind", "below", "beneath",
+	"beside", "besides", "between", "beyond", "but", "despite",
+	"down", "during", "except", "for", "inside", "like", "near",
+	"off", "onto", "over", "past", "per", "plus", "round", "save",
+	"since", "than", "through", "toward", "towards", "under",
+	"underneath", "unlike", "until", "upon", "versus", "via",
+	"within", "without"];
+
+function isTitleCase(string) {
+	const wordRE = /([\s[(><])([^\s,\.:?!\])><\/&]+)/g;
+
+	var word;
+	while (word = wordRE.exec(string)) {
+		if(word[1] == '<' && word[2].search(/^[a-z]+$/i) != -1) { //skip HTML markup
+			var startIndex = wordRE.lastIndex - word[0].length;
+			var lastIndex = string.indexOf('>', startIndex);
+			if(lastIndex != -1) {
+				wordRE.lastIndex = lastIndex;	//we don't want to move to the character after >
+				continue;
+			}
+		}
+
+		word = word[2];
+		if(word.search(/\d/) != -1	//ignore words with numbers (including just numbers)
+			|| skipWords.indexOf(word.toLowerCase()) != -1) {
+			continue;
+		}
+
+		if(word.toLowerCase() == word) return false;
+	}
+	return true;
+}
+
+*/
 
 function mapEscape(character) {
 	return alwaysMap[character];
@@ -279,6 +412,8 @@ function doExport() {
     var citekeys = new Object();
     var item;
     while(item = Zotero.nextItem()) {
+		//don't export standalone notes and attachments
+		if(item.itemType == "note" || item.itemType == "attachment") continue;
 	// determine type
 	var type = zotero2biblatexTypeMap[item.itemType];
 	if (typeof(type) == "function") { type = type(item); }
@@ -391,17 +526,16 @@ function doExport() {
 	    var editorb = "";
 	    var holder = "";
 	    var translator = "";
+	    var noEscape = false;
 
 	    for each(var creator in item.creators) {
 		//var creatorString = creator.lastName;
-
+		
 		if (creator.firstName && creator.lastName) {
 		    creatorString = creator.lastName + ", " + creator.firstName;
 		//below to preserve possible corporate creators (biblatex 1.4a manual 2.3.3)
-		} else if (creator.lastName && !creator.firstName) {
-		    creatorString = "{" + creator.lastName + "}";
-		} else if (creator.firstName && !creator.lastName) {
-		    creatorString = "{" + creator.firstName + "}";
+		} else if (creator.fieldMode == true) { // fieldMode true, assume corporate author
+		    creatorString = "{" + creator.lastName + "}"; noEscape = true;
 		}
 
 		if (creator.creatorType == "author" || creator.creatorType == "interviewer" || creator.creatorType == "director" || creator.creatorType == "programmer" || creator.creatorType == "artist" || creator.creatorType == "podcaster" || creator.creatorType == "presenter") {
@@ -425,30 +559,30 @@ function doExport() {
 	    
 	    //remove first " and " string
 	    if(author) {
-		writeField("author", author.substr(5));
+		writeField("author", author.substr(5), false, noEscape);
 	    }
 	    if(bookauthor) {
-		writeField("bookauthor", bookauthor.substr(5));
+		writeField("bookauthor", bookauthor.substr(5), false, noEscape);
 	    }
 	    if(commentator) {
-		writeField("commentator", commenter.substr(5)); 
+		writeField("commentator", commenter.substr(5), false, noEscape); 
 	    }
 	    if(editor) {
-		writeField("editor", editor.substr(5));
+		writeField("editor", editor.substr(5), false, noEscape);
 	    }
 	    if(editora) {
-		writeField("editora", editora.substr(5));
+		writeField("editora", editora.substr(5), false, noEscape);
 		writeField("editoratype", "collaborator");
 	    }
 	    if(editorb) {
-		writeField("editorb", editorb.substr(5));
+		writeField("editorb", editorb.substr(5), false, noEscape);
 		writeField("editorbtype", "redactor");
 	    }
 	    if(holder) {
-		writeField("holder", holder.substr(5));
+		writeField("holder", holder.substr(5), false, noEscape);
 	    }
 	    if(translator) {
-		writeField("translator", translator.substr(5));
+		writeField("translator", translator.substr(5), false, noEscape);
 	    }
 
 
