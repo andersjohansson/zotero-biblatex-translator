@@ -512,6 +512,9 @@ function doExport() {
 	    if(item.archive == "arXiv" || item.archive == "arxiv") {
 		writeField("eprinttype", "arxiv");
 		writeField("eprint", item.archiveLocation);
+		if(item.callNumber) {//assume call number is used for arxiv class
+		    writeField("eprintclass", item.callNumber)
+		}
 	    } else if(item.archive = "JSTOR" || item.archive == "jstor") {
 		writeField("eprinttype", "jstor");
 		writeField("eprint", item.archiveLocation);
