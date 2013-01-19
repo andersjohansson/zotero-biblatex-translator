@@ -507,14 +507,26 @@ function doExport() {
 	    writeField("howpublished", item.presentationType || item.manuscriptType);
 	}
 
-	//not really used in bl, but let's try to be complete
-	if(item.archiveLocation) {
-	    var library=item.archiveLocation;
-	    if(item.callNumber) {
-		library += " : "+item.callNumber;
+	//case of specific eprint-archives in archive-fields
+	if(item.archive && item.archiveLocation) {
+	    if(item.archive == "arXiv" || item.archive == "arxiv") {
+		writeField("eprinttype", "arxiv");
+		writeField("eprint", item.archiveLocation);
+	    } else if(item.archive = "JSTOR" || item.archive == "jstor") {
+		writeField("eprinttype", "jstor");
+		writeField("eprint", item.archiveLocation);
+	    } else if(item.archive = "PubMed" || item.archive == "pubmed") {
+		writeField("eprinttype", "pubmed");
+		writeField("eprint", item.archiveLocation);
+	    } else if(item.archive = "HDL" || item.archive == "hdl") {
+		writeField("eprinttype", "hdl");
+		writeField("eprint", item.archiveLocation);
+	    } else if(item.archive = "googlebooks" || item.archive == "Google Books") {
+		writeField("eprinttype", "googlebooks");
+		writeField("eprint", item.archiveLocation);
 	    }
-	    writeField("library",library);
 	}
+
 	
 	if(item.creators && item.creators.length) {
 	    // split creators into subcategories
