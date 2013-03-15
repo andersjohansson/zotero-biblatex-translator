@@ -359,9 +359,17 @@ function doExport() {
 	if(item.publicationTitle) {
 	    if(item.itemType == "bookSection" || item.itemType == "conferencePaper") {
 		writeField("booktitle", item.publicationTitle); 
-	    } else if (item.itemType == "journalArticle" || item.itemType == "magazineArticle" || item.itemType == "newspaperArticle"){
-		writeField("journaltitle", item.publicationTitle);
-	    }
+	    } else if (item.itemType == "magazineArticle" || item.itemType == "newspaperArticle"){
+                writeField("journaltitle", item.publicationTitle);
+	    } else if (item.itemType == "journalArticle") {
+                if(Zotero.getOption("useJournalAbbreviation")){
+		    writeField("journal", item.journalAbbreviation);
+                } else {
+                    writeField("journaltitle", item.publicationTitle);
+                    writeField("shortjournal", item.journalAbbreviation);
+                }
+            }
+
 	   // else if (item.itemType == "website" || item.itemType == "forumPost" || item.itemType == "blogPost" || item.itemType == "tvBroadcast" || item.itemType == "radioBroadcast") {
 	//	writeField("titleaddon", item.publicationTitle);
 	// 
@@ -376,7 +384,6 @@ function doExport() {
 	    }
 	}
 	
-	//TODO writeField("shortjournal", item.journalAbbreviation);
 
     //TODO: check what happens to bookTitle, is that also an alias for publicationTitle?
 
