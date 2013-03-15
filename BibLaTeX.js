@@ -143,109 +143,33 @@ function writeField(field, value, isMacro, noEscape) {
 		// Case of words with uppercase characters in non-initial positions is preserved with braces.
 		// treat hyphen as whitespace for this purpose so that Large-scale etc. don't get enclosed
 		// treat curly bracket as whitespace because of mark-up immediately preceding word
-		// treat opening parentheses &brackets as whitespace	
-		 if (field != "pages") {
-			value = value .replace(/[^\s-\}\{\(\[]+[A-Z][^\s,]*/g, "{$&}");
+		// treat opening parentheses &brackets as whitespace
+		if (field != "pages") {
+			value = value.replace(/([^\s-\}\(\[]+[A-Z][^\s,]*)/g, "{$1}");
 		}
 	}
-        //drop the crap and force UTF-8
-	//if (Zotero.getOption("exportCharset") != "UTF-8") {
-		//value = value.replace(/[\u0080-\uFFFF]/g, mapAccent);
-	//}
-       
+	//we write utf8
+	//convert the HTML markup allowed in Zotero for rich text to TeX; excluding doi/url/file shouldn't be necessary, but better to be safe;
+	if (!((field == "url") || (field == "doi") || (field == "file"))) value = mapHTMLmarkup(value);
 	Zotero.write(value);
 	if (!isMacro) Zotero.write("}");
 }
 
-function mapHTMLmarkup(characters) {
-	//convert string to DOM
-	var dom = (new DOMParser()).parseFromString(characters, 'text/html');
-	return DOMtoTeX(dom.body);
+function mapHTMLmarkup(characters){
+	//converts the HTML markup allowed in Zotero for rich text to TeX
+	//since  < and > have already been escaped, we need this rather hideous code - I couldn't see a way around it though.
+	//italics and bold
+	characters = characters.replace(/\{\\textless\}i\{\\textgreater\}(((?!\{\\textless\}\/i{\\textgreater\}).)+)\{\\textless\}\/i{\\textgreater\}/, "\\textit{$1}").replace(/\{\\textless\}b\{\\textgreater\}(((?!\{\\textless\}\/b{\\textgreater\}).)+)\{\\textless\}\/b{\\textgreater\}/g, "\\textbf{$1}");
+	//sub and superscript
+	characters = characters.replace(/\{\\textless\}sup\{\\textgreater\}(((?!\{\\textless\}\/sup\{\\textgreater\}).)+)\{\\textless\}\/sup{\\textgreater\}/g, "\$^{\\textrm{$1}}\$").replace(/\{\\textless\}sub\{\\textgreater\}(((?!\{\\textless\}\/sub\{\\textgreater\}).)+)\{\\textless\}\/sub\{\\textgreater\}/g, "\$_{\\textrm{$1}}\$");
+	//two variants of small caps
+	characters = characters.replace(/\{\\textless\}span\sstyle=\"small\-caps\"\{\\textgreater\}(((?!\{\\textless\}\/span\{\\textgreater\}).)+)\{\\textless\}\/span{\\textgreater\}/g, "\\textsc{$1}").replace(/\{\\textless\}sc\{\\textgreater\}(((?!\{\\textless\}\/sc\{\\textgreater\}).)+)\{\\textless\}\/sc\{\\textgreater\}/g, "\\textsc{$1}");
+	return characters;
 }
 
 
-var HTMLtoTeXMap = {
-	i: {
-		open: "\\textit{",
-		close: "}"
-	},
-	b: {
-		open: "\\textbf{",
-		close: "}"
-	},
-	sup: {
-		open: "\$^{\\textrm{",
-		close: "}}\$"
-	},
-	sub: {
-		open: "\$_{\\textrm{",
-		close: "}}\$"
-	},
-	span: {
-		open: "\\textsc{",
-		close: "}"
-	},
-	sc: {
-		open: "\\textsc{",
-		close: "}"
-	}
-}
-
-function DOMtoTeX(element) {
-	
-	
-	
-	var str = "";
-	var node = element.firstChild;
-	if(!node) return str;
-
-	do {
-		var nodeName = node.nodeName.toLowerCase();
-		//nodes we can handle
-		if(HTMLtoTeXMap[nodeName]) {
-			//span element must have style="small-caps"
-			if(nodeName != 'span'
-				|| (node.style && node.style.fontVariant == 'small-caps')) {
-				str += HTMLtoTeXMap[nodeName].open
-							+ DOMtoTeX(node)
-							+ HTMLtoTeXMap[nodeName].close;
-				continue;
-			}
-		}
-
-		//text nodes get appended directly
-		if(nodeName == '#text') {
-			str += node.textContent;
-			continue;
-		}
-
-		//otherwise we dig deeper, but we don't mess with the node tags
-		var outerHTML = node.outerHTML;
-		var openningTag = outerHTML.substring(0, outerHTML.indexOf(node.innerHTML));
-		var closingTag = outerHTML.substring(openningTag.length + node.innerHTML.length);
-		str += openningTag + DOMtoTeX(node) + closingTag;
-	} while(node = node.nextSibling);
-	return str;
-}
-
-function mapTeXmarkup(tex){
-	//put in a safeguard against infinite loop and to deal with capital escaping.
-	var i = 0;
-	while(tex.search(/[^\\]\{.*[^\\]\}/)!=-1  && i<10 ){
-		tex = tex.replace(/\\textit\{([^\{\}]*)\}/g, "<i>$1</i>").replace(/\\textbf\{([^\{\}]*)\}/g, "<b>$1</b>");	
-		tex = tex.replace(/\$[^\{\$\}]*_\{([^\{\}]*)\}\$/g, "<sub>$1</sub>").replace(/\$[^\{\}\$]*_\{\\textrm\{([^\{\}]+)\}\}\$/g, "<sub>$1</sub>");	
-		tex = tex.replace(/\$[^\{\}\$]*\^\{([^\{\}]*\})\$/g, "<sup>$1</sup>").replace(/\$[^\{\}\$]*\^\{\\textrm\{([^\{\}]*)\}\}\$/g, "<sup>$1</sup>");
-		tex = tex.replace(/\\textsc\{([^\{\}]+)/g, "<span style=\"small-caps\">$1</span>");
-		//we go for a minimum of 4 levels of nesting before getting rid of additional brackets
-		//we do need to remove the brackets here for the code above to work with preserved caps
-		if (i>3) tex = tex.replace(/\{([^\{\}]*[^\\])\}/g, "$1"); 
-		i++;
-	}
-	return tex;
-}
-
-/*
-var skipWords = ["but", "or", "yet", "so", "for", "and", "nor",
+//Disable the isTitleCase function until we decide what to do with it.
+/* const skipWords = ["but", "or", "yet", "so", "for", "and", "nor",
 	"a", "an", "the", "at", "by", "from", "in", "into", "of", "on",
 	"to", "with", "up", "down", "as", "while", "aboard", "about",
 	"above", "across", "after", "against", "along", "amid", "among",
@@ -258,20 +182,11 @@ var skipWords = ["but", "or", "yet", "so", "for", "and", "nor",
 	"within", "without"];
 
 function isTitleCase(string) {
-	const wordRE = /([\s[(><])([^\s,\.:?!\])><\/&]+)/g;
+	const wordRE = /[\s[(]([^\s,\.:?!\])]+)/g;
 
 	var word;
 	while (word = wordRE.exec(string)) {
-		if(word[1] == '<' && word[2].search(/^[a-z]+$/i) != -1) { //skip HTML markup
-			var startIndex = wordRE.lastIndex - word[0].length;
-			var lastIndex = string.indexOf('>', startIndex);
-			if(lastIndex != -1) {
-				wordRE.lastIndex = lastIndex;	//we don't want to move to the character after >
-				continue;
-			}
-		}
-
-		word = word[2];
+		word = word[1];
 		if(word.search(/\d/) != -1	//ignore words with numbers (including just numbers)
 			|| skipWords.indexOf(word.toLowerCase()) != -1) {
 			continue;
@@ -281,13 +196,11 @@ function isTitleCase(string) {
 	}
 	return true;
 }
-
 */
 
 function mapEscape(character) {
 	return alwaysMap[character];
 }
-
 
 
 // a little substitution function for BibTeX keys, where we don't want LaTeX 
@@ -330,27 +243,27 @@ var citeKeyConversionsRe = /%([a-zA-Z])/;
 var citeKeyCleanRe = /[^a-z0-9\!\$\&\*\+\-\.\/\:\;\<\>\?\[\]\^\_\`\|]+/g;
 
 var citeKeyConversions = {
-    "a":function (flags, item) {
-        if(item.creators && item.creators[0] && item.creators[0].lastName) {
-            return item.creators[0].lastName.toLowerCase().replace(/ /g,"_").replace(/,/g,"");
-        }
-        return "";
-    },
-    "t":function (flags, item) {
-        if (item["title"]) {
-            return item["title"].toLowerCase().replace(citeKeyTitleBannedRe, "").split(/\s+/g)[0];
-        }
-        return "";
-    },
-    "y":function (flags, item) {
-        if(item.date) {
-            var date = Zotero.Utilities.strToDate(item.date);
-            if(date.year && numberRe.test(date.year)) {
-                return date.year;
-            }
-        }
-        return "????";
-    }
+	"a":function (flags, item) {
+		if(item.creators && item.creators[0] && item.creators[0].lastName) {
+			return item.creators[0].lastName.toLowerCase().replace(/ /g,"_").replace(/,/g,"");
+		}
+		return "";
+	},
+	"t":function (flags, item) {
+		if (item["title"]) {
+			return item["title"].toLowerCase().replace(citeKeyTitleBannedRe, "").split(/\s+/g)[0];
+		}
+		return "";
+	},
+	"y":function (flags, item) {
+		if(item.date) {
+			var date = Zotero.Utilities.strToDate(item.date);
+			if(date.year && numberRe.test(date.year)) {
+				return date.year;
+			}
+		}
+		return "????";
+	}
 }
 
 
@@ -414,6 +327,7 @@ function doExport() {
     while(item = Zotero.nextItem()) {
 		//don't export standalone notes and attachments
 		if(item.itemType == "note" || item.itemType == "attachment") continue;
+
 	// determine type
 	var type = zotero2biblatexTypeMap[item.itemType];
 	if (typeof(type) == "function") { type = type(item); }
@@ -461,6 +375,9 @@ function doExport() {
 		//TODO, did we miss something
 	    }
 	}
+	
+	//TODO writeField("shortjournal", item.journalAbbreviation);
+
     //TODO: check what happens to bookTitle, is that also an alias for publicationTitle?
 
 	
@@ -652,7 +569,6 @@ function doExport() {
 	    }
 	}
 	
-	
 	if(item.attachments) {
 	    var attachmentString = "";
 	    
@@ -670,7 +586,6 @@ function doExport() {
 		writeField("file", attachmentString.substr(1));
 	    }
 	}
-
 	
 	Zotero.write("\n}");
     }
