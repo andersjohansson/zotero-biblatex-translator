@@ -8,6 +8,7 @@
     "maxVersion":"null",
     "priority":100,
     "inRepository":false,
+    "configOptions":{"getCollections":"true"},
     "displayOptions": {
 		"exportCharset": "UTF-8",
 		"exportNotes": false,
