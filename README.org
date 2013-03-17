@@ -1,0 +1,25 @@
+* Zotero BibLaTeX translator
+This is an export (only) translator adapted from the standard BibTeX translator of Zotero ([[https://github.com/zotero/translators][available here on github]]). It aims to map item types and item fields as correctly as possible from Zotero to the extended .bib-format of BibLaTeX. It also contains some [[#special-features][special features, see below]].
+
+** Installation
+[[https://github.com/andersjohansson/zotero-biblatex-translator/raw/master/BibLaTeX.js][Download BibLaTeX.js]] and copy it to the translators directory of your [[http://www.zotero.org/support/zotero_data#locating_your_zotero_library][Zotero data directory]].
+
+** Special features
+:PROPERTIES:
+:CUSTOM_ID: special-features
+:END:
+*** Recursive export of collections
+When exporting a collection, all items in subcollections are included as well. I really needed this feature but if you don't want it you only have to remove line 11: 
+#+BEGIN_SRC js
+    "configOptions":{"getCollections":"true"},
+#+END_SRC
+
+*** Using special fields of BibLaTeX not available in Zotero
+To use some of the fields that are available in BibLaTeX but not in Zotero I have implemented a special feature where these can be added to Zotero's =Extra= field. For example, to store an =origdate=, =origtitle= in Zotero and get them correctly exported to BibLaTeX one would put the following into the =Extra= field:
+: biblatexdata[origdate=1856;origtitle=An Old Title]
+The complete syntax for the =Extra= field thus is:
+: <Text that could be whatever>biblatexdata[fieldname1=fieldvalue1;...]<could also be some text>
+This works great for simple examples, but it will break if you for instance need to use @<code>=@</code> or =;= in your field values. I guess I could come up with some better way if this is needed.
+
+** More documentation
+For a list of the field mappings, see the [[https://github.com/andersjohansson/zotero-biblatex-translator/wiki][wiki]].
