@@ -1,5 +1,5 @@
 * Zotero BibLaTeX translator
-This is an export (only) translator adapted from the standard BibTeX translator of Zotero ([[https://github.com/zotero/translators][available here on github]]). It aims to map item types and item fields as correctly as possible from Zotero to the extended .bib-format of BibLaTeX. It also contains some [[#special-features][special features, see below]].
+This is an export (only) translator adapted from the standard BibTeX translator of Zotero ([[https://github.com/zotero/translators][available here on github]]). It aims to map item types and item fields as correctly as possible from Zotero to the extended .bib-format of [[http://www.ctan.org/pkg/biblatex][BibLaTeX]]. It also contains some [[#special-features][special features, see below]].
 
 ** Installation
 [[https://github.com/andersjohansson/zotero-biblatex-translator/raw/master/BibLaTeX.js][Download BibLaTeX.js]] and copy it to the translators directory of your [[http://www.zotero.org/support/zotero_data#locating_your_zotero_library][Zotero data directory]].
