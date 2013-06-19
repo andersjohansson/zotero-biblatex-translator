@@ -15,7 +15,7 @@
 		"exportFileData": false,
 		"useJournalAbbreviation": false
     },
-    "lastUpdated":"2013-01-04 18:00"
+    "lastUpdated":"2013-06-19 15:06"
 }
 
 
@@ -530,15 +530,12 @@ function doExport() {
 
 	
 	if(item.accessDate){
-	    writeField("urldate",item.accessDate.substr(0,10));
-	}
-	//	} else if(item.dateAdded){
-	//		writeField("urldate",item.dateAdded.substr(0,10));
-	//	}
+            writeField("urldate", Zotero.Utilities.strToISO(item.accessDate));
+        }
 
 	//TODO enable handling of date ranges when that's added to zotero
 	if(item.date) {
-	    writeField("date",item.date); //biblatex is smart, so this works (but not with ranges)
+	    writeField("date",Zotero.Utilities.strToISO(item.date));
 	}
 	
 	
