@@ -15,7 +15,7 @@
 		"exportFileData": false,
 		"useJournalAbbreviation": false
     },
-    "lastUpdated":"2013-06-19 15:06"
+    "lastUpdated":"2013-07-01 14:13"
 }
 
 
@@ -334,9 +334,18 @@ function doExport() {
 	if (typeof(type) == "function") { type = type(item); }
 	if(!type) type = "misc";
 	
-	// create a unique citation key
-	var citekey = buildCiteKey(item, citekeys);
-	
+
+        //If you want a custom citekey: just use
+        //"biblatexcitekey[mycitekey] in the Extra field
+        var citekey = "";
+        if (item.extra && item.extra.search(/biblatexcitekey\[.+\]/) != -1) {
+            var citekey = item.extra.match(/biblatexcitekey\[(.+)\]/)[1]; 
+        }
+	if(!citekey) {
+	    // create a unique citation key
+	    citekey = buildCiteKey(item, citekeys);
+	}
+
 	// write citation key (removed the comma)
 	Zotero.write((first ? "" : "\n\n") + "@"+type+"{"+citekey);
 	first = false;

@@ -4,7 +4,7 @@ This is an export (only) translator adapted from the standard BibTeX translator 
 ** Installation
 [[https://github.com/andersjohansson/zotero-biblatex-translator/raw/master/BibLaTeX.js][Download BibLaTeX.js]] and copy it to the translators directory of your [[http://www.zotero.org/support/zotero_data#locating_your_zotero_library][Zotero data directory]].
 
-** Special features
+** Special features ("hacks")
 *** Recursive export of collections
 When exporting a collection, all items in subcollections are included as well. I really needed this feature but if you don't want it you only have to remove line 11: 
 #+BEGIN_SRC js
@@ -17,6 +17,9 @@ To use some of the fields that are available in BibLaTeX but not in Zotero I hav
 The complete syntax for the =Extra= field thus is:
 : <Text that could be whatever>biblatexdata[fieldname1=fieldvalue1;...]<could also be some text>
 This works great for simple examples, but it will break if you for instance need to use =[=, =]=, = or =;= in your field values. I guess I could come up with some better way if this is needed.
+
+*** Using custom citekeys
+You can also put =biblatexcitekey[my_key]= (along with other text) in the =Extra= field and =my_key= will be used as citekey.
 
 ** More documentation
 For a list of the field mappings, see the [[https://github.com/andersjohansson/zotero-biblatex-translator/wiki][wiki]].
