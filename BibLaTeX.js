@@ -1,7 +1,7 @@
 {
     "translatorID":"ba4cd274-f24e-42cf-8ff2-ccfc603aacf3",
     "translatorType":2,
-    "label":"BibLaTeX",
+    "label":"BibLaTeX-with-hacks",
     "creator":"Simon Kornblith, Richard Karnesky and Anders Johansson",
     "target":"bib",
     "minVersion":"2.1.9",
@@ -15,9 +15,8 @@
 		"exportFileData": false,
 		"useJournalAbbreviation": false
     },
-    "lastUpdated":"2013-07-01 14:13"
+    "lastUpdated":"2013-10-28 09:03"
 }
-
 
 //%a = first author surname
 //%y = year
@@ -129,17 +128,6 @@ function writeField(field, value, isMacro, noEscape) {
 		//escape < > if mapHTMLmarkup did not convert some
 		value = value.replace(/[<>]/g, mapEscape);
 		
-		/*
-		if (field == "title" || field == "type" || field == "shorttitle" || field == "booktitle" || field == "series") {
-			if (!titleCase) {
-				//protect caps for everything but the first letter
-					value = value.replace(/(.)([A-Z]+)/g, "$1{$2}");
-			} else {	//protect all-caps vords and initials
-				value = value.replace(/([\s.->])([A-Z]+)(?=\.)/g, "$1{$2}");	//protect initials
-				if(value.toUpperCase() != value) value = value.replace(/([\s>])([A-Z]{2,})(?=[\.,\s<]|$)/g, "$1{$2}");
-			}
-		}
-		*/	
 			
 		// Case of words with uppercase characters in non-initial positions is preserved with braces.
 		// treat hyphen as whitespace for this purpose so that Large-scale etc. don't get enclosed
@@ -331,7 +319,9 @@ function doExport() {
 
 	// determine type
 	var type = zotero2biblatexTypeMap[item.itemType];
-	if (typeof(type) == "function") { type = type(item); }
+			if (typeof (type) == "function") {
+				type = type(item);
+			}
 	if(!type) type = "misc";
 	
 
@@ -484,7 +474,8 @@ function doExport() {
 		    creatorString = creator.lastName + ", " + creator.firstName;
 		//below to preserve possible corporate creators (biblatex 1.4a manual 2.3.3)
 		} else if (creator.fieldMode == true) { // fieldMode true, assume corporate author
-		    creatorString = "{" + creator.lastName + "}"; noEscape = true;
+			creatorString = "{" + creator.lastName + "}";
+			noEscape = true;
 		}
 
 		if (creator.creatorType == "author" || creator.creatorType == "interviewer" || creator.creatorType == "director" || creator.creatorType == "programmer" || creator.creatorType == "artist" || creator.creatorType == "podcaster" || creator.creatorType == "presenter") {
@@ -500,7 +491,7 @@ function doExport() {
 		} else if (creator.creatorType == "translator") {
 		    translator += " and "+creatorString;
 		} else if (creator.creatorType == "seriesEditor") {//let's call them redacors
-		    editorb = +" and "+creatorString;
+			editorb += " and " + creatorString;
 		} else {// the rest into editora with editoratype = collaborator
 		    editora += " and "+creatorString;
 		}
@@ -533,11 +524,8 @@ function doExport() {
 	    if(translator) {
 		writeField("translator", translator.substr(5), false, noEscape);
 	    }
-
-
 	}
 
-	
 	if(item.accessDate){
             writeField("urldate", Zotero.Utilities.strToISO(item.accessDate));
         }
@@ -560,11 +548,9 @@ function doExport() {
 		    var ps=pair.split("=",2);
 		    writeField(ps[0],ps[1]);
 		}
-
 	    } else{
 		writeField("note", item.extra);
 	    }
-
 	}
 	
 	if(item.tags && item.tags.length) {
