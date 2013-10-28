@@ -1,8 +1,11 @@
 * Zotero BibLaTeX translator
 This is an export (only) translator adapted from the standard BibTeX translator of Zotero ([[https://github.com/zotero/translators][available here on github]]). It aims to map item types and item fields as correctly as possible from Zotero to the extended .bib-format of [[http://www.ctan.org/pkg/biblatex][BibLaTeX]]. It also contains some [[#special-features][special features, see below]].
 
+** Only use this version if you need the "special features"!
+As of 2013-10-24 there is an official version of this translator included with Zotero. This version should then only be used if you need the "special features" below. The name of this translator in the translator dialog is "BibLaTeX-with-hacks" to distinguish it from the official version.
+
 ** Installation
-[[https://github.com/andersjohansson/zotero-biblatex-translator/raw/master/BibLaTeX.js][Download BibLaTeX.js]] and copy it to the translators directory of your [[http://www.zotero.org/support/zotero_data#locating_your_zotero_library][Zotero data directory]].
+[[https://raw.github.com/andersjohansson/zotero-biblatex-translator/master/BibLaTeX-with-hacks.js][Download BibLaTeX-with-hacks.js]] and copy it to the translators directory of your [[http://www.zotero.org/support/zotero_data#locating_your_zotero_library][Zotero data directory]].
 
 ** Special features ("hacks")
 *** Recursive export of collections
