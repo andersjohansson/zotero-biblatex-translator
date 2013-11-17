@@ -329,7 +329,8 @@ function doExport() {
         //"biblatexcitekey[mycitekey] in the Extra field
         var citekey = "";
         if (item.extra && item.extra.search(/biblatexcitekey\[.+\]/) != -1) {
-            var citekey = item.extra.match(/biblatexcitekey\[(.+)\]/)[1]; 
+            citekey = item.extra.match(/biblatexcitekey\[(.+)\]/)[1];
+            item.extra = item.extra.replace(/biblatexcitekey\[(.+)\]/, "");
         }
 	if(!citekey) {
 	    // create a unique citation key
