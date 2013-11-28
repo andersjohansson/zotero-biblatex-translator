@@ -108,6 +108,38 @@ var alwaysMap = {
 };
 
 
+//to map ISO language codes to babel/polyglossia language codes used
+//in biblates.
+//from list of supported languages in biblatex 2.8
+var languageMap = {
+	"ca":"catalan",
+	"hr":"croatian",
+	"cz":"czech",
+	"da":"danish",
+	"nl":"dutch",
+	"en-US":"american",
+	"en":"english", //same as american
+	"en-GB":"british",
+	"en-CA":"canadian",
+	"en-AU":"australian",
+	"en-NZ":"newzealand",
+	"fi":"finnish",
+	"fr":"french",
+	"de":"german",
+	"de-AT":"austrian",
+//	"de":"ngerman", //FIXME: should ngerman be available via some hack?
+//	"de-AT":"naustrian", //FIXME: same problem here
+	"el":"greek",
+	"it":"italian",
+	"nn":"norwegian",
+	"pl":"polish",
+	"pt-BR":"brazil",
+	"pt-PT":"portugese",
+	"pt":"portuguese",
+	"ru":"russian",
+	"es":"spanish",
+	"sv":"swedish",
+};
 
 
 // some fields are, in fact, macros.  If that is the case then we should not put the
