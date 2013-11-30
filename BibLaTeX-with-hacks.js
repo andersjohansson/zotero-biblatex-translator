@@ -345,6 +345,9 @@ function doExport() {
 		//don't export standalone notes and attachments
 		if(item.itemType == "note" || item.itemType == "attachment") continue;
 
+        var noteused = false; //a switch for keeping track whether the
+        //field "note" has been written to
+
 	// determine type
 	var type = zotero2biblatexTypeMap[item.itemType];
 			if (typeof (type) == "function") {
@@ -489,6 +492,13 @@ function doExport() {
 	    }
 	}
 
+        //presentations have a meetingName field which we want to
+        //map to note
+        if (item.meetingName) {
+            write.Field("note", item.meetingName);
+            noteused = true;
+        }
+
 	
 	if(item.creators && item.creators.length) {
 	    // split creators into subcategories
@@ -604,7 +614,11 @@ function doExport() {
 		    var ps=pair.split("=",2);
 		    writeField(ps[0],ps[1]);
 		}
-	    } else{
+	    }
+
+            //if we still have data left and have not written
+            //anything else to note
+            if (item.extra != "" && !noteused) {
 		writeField("note", item.extra);
 	    }
 	}
