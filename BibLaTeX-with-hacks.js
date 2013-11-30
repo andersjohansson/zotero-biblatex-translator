@@ -35,6 +35,7 @@ var fieldMap = {
     issn:"ISSN",
     url:"url",
     doi:"DOI",
+    series:"series",
     shorttitle:"shortTitle",
     abstract:"abstract",
     volumes:"numberOfVolumes",
@@ -439,13 +440,6 @@ function doExport() {
 	    writeField("titleaddon", item.websiteTitle || item.forumTitle || item.blogTitle || item.programTitle);
 	}
 	
-	//don't really know if this is the best way
-	if(item.seriesTitle) {
-	    writeField("series",item.seriesTitle);
-	} else if(item.series) {
-	    writeField("series",item.series);
-	}
-
 	
 	if(item.publisher) {
 	    if(item.itemType == "thesis") {
