@@ -37,7 +37,7 @@ var fieldMap = {
     doi:"DOI",
     series:"series",
     shorttitle:"shortTitle",
-    abstract:"abstract",
+    abstract:"abstractNote",
     volumes:"numberOfVolumes",
     version:"version",
     eventtitle:"conferenceName",
