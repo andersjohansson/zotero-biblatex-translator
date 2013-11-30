@@ -184,35 +184,7 @@ function mapHTMLmarkup(characters){
 }
 
 
-//Disable the isTitleCase function until we decide what to do with it.
-/* const skipWords = ["but", "or", "yet", "so", "for", "and", "nor",
-	"a", "an", "the", "at", "by", "from", "in", "into", "of", "on",
-	"to", "with", "up", "down", "as", "while", "aboard", "about",
-	"above", "across", "after", "against", "along", "amid", "among",
-	"anti", "around", "as", "before", "behind", "below", "beneath",
-	"beside", "besides", "between", "beyond", "but", "despite",
-	"down", "during", "except", "for", "inside", "like", "near",
-	"off", "onto", "over", "past", "per", "plus", "round", "save",
-	"since", "than", "through", "toward", "towards", "under",
-	"underneath", "unlike", "until", "upon", "versus", "via",
-	"within", "without"];
 
-function isTitleCase(string) {
-	const wordRE = /[\s[(]([^\s,\.:?!\])]+)/g;
-
-	var word;
-	while (word = wordRE.exec(string)) {
-		word = word[1];
-		if(word.search(/\d/) != -1	//ignore words with numbers (including just numbers)
-			|| skipWords.indexOf(word.toLowerCase()) != -1) {
-			continue;
-		}
-
-		if(word.toLowerCase() == word) return false;
-	}
-	return true;
-}
-*/
 
 function mapEscape(character) {
 	return alwaysMap[character];
