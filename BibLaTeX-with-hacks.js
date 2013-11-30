@@ -40,7 +40,6 @@ var fieldMap = {
     volumes:"numberOfVolumes",
     version:"version",
     eventtitle:"conferenceName",
-    language:"language",
     issue:"issue",
     pages:"pages",
     pagetotal:"numPages"
@@ -117,16 +116,16 @@ var languageMap = {
 	"cz":"czech",
 	"da":"danish",
 	"nl":"dutch",
-	"en-US":"american",
-	"en":"english", //same as american
-	"en-GB":"british",
-	"en-CA":"canadian",
-	"en-AU":"australian",
-	"en-NZ":"newzealand",
+	"en":{""  :"english", //same as american
+              "US":"american",
+              "GB":"british",
+              "CA":"canadian",
+              "AU":"australian",
+              "NZ":"newzealand"},
 	"fi":"finnish",
 	"fr":"french",
-	"de":"german",
-	"de-AT":"austrian",
+	"de":{""  :"german",
+              "AT":"austrian"},
 //	"de":"ngerman", //FIXME: should ngerman be available via some hack?
 //	"de-AT":"naustrian", //FIXME: same problem here
 	"el":"greek",
@@ -135,7 +134,9 @@ var languageMap = {
 	"pl":"polish",
 	"pt-BR":"brazil",
 	"pt-PT":"portugese",
-	"pt":"portuguese",
+	"pt":{""  :"portuguese",
+              "PT":"portuguese",
+              "BR":"brazil"},
 	"ru":"russian",
 	"es":"spanish",
 	"sv":"swedish",
@@ -567,6 +568,27 @@ function doExport() {
 	if(item.date) {
 	    writeField("date",Zotero.Utilities.strToISO(item.date));
 	}
+
+        //Map Languages to biblatex-field "langid" (used for
+        //hyphenation with a correct setting of the "autolang" option)
+        //if possible. See languageMap above for languagecodes to use
+        if(item.language) {
+            var lang = languageMap[item.language.slice(0,2)]
+            if (typeof lang == 'string' || lang instanceof String) {
+            //if there are no variants for this language
+                writeField("langid",lang);
+            } else if(typeof lang == 'object') {
+                var variant = lang[item.language.slice(3,5)];
+                if (variant) {
+                    writeField("langid",variant);
+                } else {
+                    writeField("langid",lang[""]); //use default variant
+                }
+
+            } else {
+                writeField("language","lang:" + item.language) // language field, which is sometimes written out by biblatex. FIXME: perhaps one should be able to use both langid and language in some way.
+            }
+        }
 	
 	
 	if(item.extra) {
