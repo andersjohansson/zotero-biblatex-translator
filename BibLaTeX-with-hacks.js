@@ -621,7 +621,7 @@ function doExport() {
 	if (item.notes && Zotero.getOption("exportNotes")) {
 	    for(var i in item.notes) {
 		var note = item.notes[i];
-		writeField("annote", Zotero.Utilities.unescapeHTML(note["note"]));
+		writeField("annotation", Zotero.Utilities.unescapeHTML(note["note"]));
 	    }
 	}
 	
