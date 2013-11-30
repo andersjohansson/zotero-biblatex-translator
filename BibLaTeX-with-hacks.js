@@ -350,6 +350,9 @@ function doExport() {
 			if (typeof (type) == "function") {
 				type = type(item);
 			}
+        //biblatex recommends us to use mvbook for multi-volume books
+        if(type == "book" && item.volume) type = "mvbook"
+
 	if(!type) type = "misc";
 	
 
