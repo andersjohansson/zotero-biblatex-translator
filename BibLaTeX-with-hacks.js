@@ -1,21 +1,21 @@
 {
-    "translatorID":"ba4cd274-f24e-42cf-8ff2-ccfc603aacf3",
-    "translatorType":2,
-    "label":"BibLaTeX-with-hacks",
-    "creator":"Simon Kornblith, Richard Karnesky and Anders Johansson",
-    "target":"bib",
-    "minVersion":"2.1.9",
-    "maxVersion":"null",
-    "priority":100,
-    "inRepository":false,
-    "configOptions":{"getCollections":"true"},
-    "displayOptions": {
+	"translatorID":"ba4cd274-f24e-42cf-8ff2-ccfc603aacf3",
+	"translatorType":2,
+	"label":"BibLaTeX-with-hacks",
+	"creator":"Simon Kornblith, Richard Karnesky and Anders Johansson",
+	"target":"bib",
+	"minVersion":"2.1.9",
+	"maxVersion":"null",
+	"priority":100,
+	"inRepository":false,
+	"configOptions":{"getCollections":"true"},
+	"displayOptions": {
 		"exportCharset": "UTF-8",
 		"exportNotes": false,
 		"exportFileData": false,
 		"useJournalAbbreviation": false
-    },
-    "lastUpdated":"2013-11-30 18:13"
+	},
+	"lastUpdated":"2013-11-30 18:13"
 }
 
 //%a = first author surname
@@ -25,17 +25,17 @@ var citeKeyFormat = "%a_%t_%y";
 
 
 var fieldMap = {
-    location:"place",
-    chapter:"chapter",
-    edition:"edition",
+	location:"place",
+	chapter:"chapter",
+	edition:"edition",
     title:"title",
     volume:"volume",
     rights:"rights", //it's rights in zotero nowadays
     isbn:"ISBN",
     issn:"ISSN",
-    url:"url",
+	url:"url",
     doi:"DOI",
-    series:"series",
+	series:"series",
     shorttitle:"shortTitle",
     abstract:"abstractNote",
     volumes:"numberOfVolumes",
@@ -52,40 +52,40 @@ var fieldMap = {
 
 
 var zotero2biblatexTypeMap = {
-    "book":"book",
-    "bookSection":"inbook",
-    "journalArticle":"article",
-    "magazineArticle":"article",
-    "newspaperArticle":"article",
-    "thesis":"thesis",
-    "letter":"letter",
-    "manuscript":"unpublished",
-    "interview":"misc",
-    "film":"movie",
-    "artwork":"artwork",
-    "webpage":"online",
-    "conferencePaper":"inproceedings",
-    "report":"report",
-    "bill":"legislation",
-    "case":"jurisdiction",
-    "hearing":"jurisdiction",
-    "patent":"patent",
-    "statute":"legislation",
-    "email":"letter",
-    "map":"misc",
-    "blogPost":"online",
-    "instantMessage":"misc",
-    "forumPost":"online",
-    "audioRecording":"audio",
-    "presentation":"unpublished",
-    "videoRecording":"video",
-    "tvBroadcast":"misc",
-    "radioBroadcast":"misc",
-    "podcast":"audio",
-    "computerProgram":"software",
-    "document":"misc",
-    "encyclopediaArticle":"inreference",
-    "dictionaryEntry":"inreference"
+	"book":"book",
+	"bookSection":"inbook",
+	"journalArticle":"article",
+	"magazineArticle":"article",
+	"newspaperArticle":"article",
+	"thesis":"thesis",
+	"letter":"letter",
+	"manuscript":"unpublished",
+	"interview":"misc",
+	"film":"movie",
+	"artwork":"artwork",
+	"webpage":"online",
+	"conferencePaper":"inproceedings",
+	"report":"report",
+	"bill":"legislation",
+	"case":"jurisdiction",
+	"hearing":"jurisdiction",
+	"patent":"patent",
+	"statute":"legislation",
+	"email":"letter",
+	"map":"misc",
+	"blogPost":"online",
+	"instantMessage":"misc",
+	"forumPost":"online",
+	"audioRecording":"audio",
+	"presentation":"unpublished",
+	"videoRecording":"video",
+	"tvBroadcast":"misc",
+	"radioBroadcast":"misc",
+	"podcast":"audio",
+	"computerProgram":"software",
+	"document":"misc",
+	"encyclopediaArticle":"inreference",
+	"dictionaryEntry":"inreference"
 };
 
 
@@ -111,17 +111,17 @@ var languageMap = {
 	"da":"danish",
 	"nl":"dutch",
 	"en":{""  :"english", //same as american
-              "US":"american",
-              "GB":"british",
-              "CA":"canadian",
-              "AU":"australian",
-              "NZ":"newzealand"},
+	      "US":"american",
+	      "GB":"british",
+	      "CA":"canadian",
+	      "AU":"australian",
+	      "NZ":"newzealand"},
 	"fi":"finnish",
 	"fr":"french",
 	"de":{""  :"german",
-              "AT":"austrian"},
-//	"de":"ngerman", //FIXME: should ngerman be available via some hack?
-//	"de-AT":"naustrian", //FIXME: same problem here
+	      "AT":"austrian"},
+	//	"de":"ngerman", //FIXME: should ngerman be available via some hack?
+	//	"de-AT":"naustrian", //FIXME: same problem here
 	"el":"greek",
 	"it":"italian",
 	"nn":"norwegian",
@@ -129,8 +129,8 @@ var languageMap = {
 	"pt-BR":"brazil",
 	"pt-PT":"portugese",
 	"pt":{""  :"portuguese",
-              "PT":"portuguese",
-              "BR":"brazil"},
+	      "PT":"portuguese",
+	      "BR":"brazil"},
 	"ru":"russian",
 	"es":"spanish",
 	"sv":"swedish",
@@ -154,8 +154,8 @@ function writeField(field, value, isMacro, noEscape) {
 		value = mapHTMLmarkup(value);
 		//escape < > if mapHTMLmarkup did not convert some
 		value = value.replace(/[<>]/g, mapEscape);
-		
-			
+
+
 		// Case of words with uppercase characters in non-initial positions is preserved with braces.
 		// treat hyphen as whitespace for this purpose so that Large-scale etc. don't get enclosed
 		// treat curly bracket as whitespace because of mark-up immediately preceding word
@@ -173,7 +173,7 @@ function writeField(field, value, isMacro, noEscape) {
 
 function mapHTMLmarkup(characters){
 	//converts the HTML markup allowed in Zotero for rich text to TeX
-	//since  < and > have already been escaped, we need this rather hideous code - I couldn't see a way around it though.
+	//since	 < and > have already been escaped, we need this rather hideous code - I couldn't see a way around it though.
 	//italics and bold
 	characters = characters.replace(/\{\\textless\}i\{\\textgreater\}(((?!\{\\textless\}\/i{\\textgreater\}).)+)\{\\textless\}\/i{\\textgreater\}/, "\\textit{$1}").replace(/\{\\textless\}b\{\\textgreater\}(((?!\{\\textless\}\/b{\\textgreater\}).)+)\{\\textless\}\/b{\\textgreater\}/g, "\\textbf{$1}");
 	//sub and superscript
@@ -191,7 +191,7 @@ function mapEscape(character) {
 }
 
 
-// a little substitution function for BibTeX keys, where we don't want LaTeX 
+// a little substitution function for BibTeX keys, where we don't want LaTeX
 // escaping, but we do want to preserve the base characters
 
 function tidyAccents(s) {
@@ -202,7 +202,7 @@ function tidyAccents(s) {
 	if (ZU.removeDiacritics !== undefined)
 		r = ZU.removeDiacritics(r, true);
 	else {
-	// We fall back on the replacement list we used previously
+		// We fall back on the replacement list we used previously
 		r = r.replace(new RegExp("[ä]", 'g'),"ae");
 		r = r.replace(new RegExp("[ö]", 'g'),"oe");
 		r = r.replace(new RegExp("[ü]", 'g'),"ue");
@@ -211,7 +211,7 @@ function tidyAccents(s) {
 		r = r.replace(new RegExp("ç", 'g'),"c");
 		r = r.replace(new RegExp("[èéêë]", 'g'),"e");
 		r = r.replace(new RegExp("[ìíîï]", 'g'),"i");
-		r = r.replace(new RegExp("ñ", 'g'),"n");                            
+		r = r.replace(new RegExp("ñ", 'g'),"n");
 		r = r.replace(new RegExp("[òóôõ]", 'g'),"o");
 		r = r.replace(new RegExp("œ", 'g'),"oe");
 		r = r.replace(new RegExp("[ùúû]", 'g'),"u");
@@ -223,7 +223,7 @@ function tidyAccents(s) {
 
 var numberRe = /^[0-9]+/;
 // Below is a list of words that should not appear as part of the citation key
-// in includes the indefinite articles of English, German, French and Spanish, as well as a small set of English prepositions whose 
+// in includes the indefinite articles of English, German, French and Spanish, as well as a small set of English prepositions whose
 // force is more grammatical than lexical, i.e. which are likely to strike many as 'insignificant'.
 // The assumption is that most who want a title word in their key would prefer the first word of significance.
 var citeKeyTitleBannedRe = /\b(a|an|the|some|from|on|in|to|of|do|with|der|die|das|ein|eine|einer|eines|einem|einen|un|une|la|le|l\'|el|las|los|al|uno|una|unos|unas|de|des|del|d\')(\s+|\b)/g;
@@ -260,28 +260,28 @@ function buildCiteKey (item,citekeys) {
     var counter = 0;
     citeKeyFormatRemaining = citeKeyFormat;
     while (citeKeyConversionsRe.test(citeKeyFormatRemaining)) {
-        if (counter > 100) {
-            Zotero.debug("Pathological BibTeX format: " + citeKeyFormat);
-            break;
-        }
-        var m = citeKeyFormatRemaining.match(citeKeyConversionsRe);
-        if (m.index > 0) {
-            //add data before the conversion match to basekey
-            basekey = basekey + citeKeyFormatRemaining.substr(0, m.index);
-        }
-        var flags = ""; // for now
-        var f = citeKeyConversions[m[1]];
-        if (typeof(f) == "function") {
-            var value = f(flags, item);
-            Zotero.debug("Got value " + value + " for %" + m[1]);
-            //add conversion to basekey
-            basekey = basekey + value;
-        }
-        citeKeyFormatRemaining = citeKeyFormatRemaining.substr(m.index + m.length);
-        counter++;
+		if (counter > 100) {
+			Zotero.debug("Pathological BibTeX format: " + citeKeyFormat);
+			break;
+		}
+		var m = citeKeyFormatRemaining.match(citeKeyConversionsRe);
+		if (m.index > 0) {
+			//add data before the conversion match to basekey
+			basekey = basekey + citeKeyFormatRemaining.substr(0, m.index);
+		}
+		var flags = ""; // for now
+		var f = citeKeyConversions[m[1]];
+		if (typeof(f) == "function") {
+			var value = f(flags, item);
+			Zotero.debug("Got value " + value + " for %" + m[1]);
+			//add conversion to basekey
+			basekey = basekey + value;
+		}
+		citeKeyFormatRemaining = citeKeyFormatRemaining.substr(m.index + m.length);
+		counter++;
     }
     if (citeKeyFormatRemaining.length > 0) {
-        basekey = basekey + citeKeyFormatRemaining;
+		basekey = basekey + citeKeyFormatRemaining;
     }
 
     // for now, remove any characters not explicitly known to be allowed;
@@ -290,15 +290,15 @@ function buildCiteKey (item,citekeys) {
     //
     // no matter what, we want to make sure we exclude
     // " # % ' ( ) , = { } ~ and backslash
-    // however, we want to keep the base characters 
+    // however, we want to keep the base characters
 
     basekey = tidyAccents(basekey);
     basekey = basekey.replace(citeKeyCleanRe, "");
     var citekey = basekey;
     var i = 0;
     while(citekeys[citekey]) {
-        i++;
-        citekey = basekey + "-" + i;
+		i++;
+		citekey = basekey + "-" + i;
     }
     citekeys[citekey] = true;
     return citekey;
@@ -309,7 +309,7 @@ function doExport() {
     // to make sure the BOM gets ignored
     Zotero.write("\n");
     Zotero.write("% This is a file in the format of BibLaTeX (http://www.ctan.org/pkg/biblatex), using features unsupported by standard BibTeX, and generated with the BibLaTeX translator of Zotero " + Zotero.Utilities.getVersion() + "\n\n");
-    
+
     var first = true;
     var citekeys = new Object();
     var item;
@@ -317,296 +317,296 @@ function doExport() {
 		//don't export standalone notes and attachments
 		if(item.itemType == "note" || item.itemType == "attachment") continue;
 
-        var noteused = false; //a switch for keeping track whether the
-        //field "note" has been written to
+		var noteused = false; //a switch for keeping track whether the
+		//field "note" has been written to
 
-	// determine type
-	var type = zotero2biblatexTypeMap[item.itemType];
-			if (typeof (type) == "function") {
-				type = type(item);
+		// determine type
+		var type = zotero2biblatexTypeMap[item.itemType];
+		if (typeof (type) == "function") {
+			type = type(item);
+		}
+		//biblatex recommends us to use mvbook for multi-volume books
+		if(type == "book" && item.volume) type = "mvbook"
+
+		if(!type) type = "misc";
+
+
+		//If you want a custom citekey: just use
+		//"biblatexcitekey[mycitekey] in the Extra field
+		var citekey = "";
+		if (item.extra && item.extra.search(/biblatexcitekey\[.+\]/) != -1) {
+			citekey = item.extra.match(/biblatexcitekey\[(.+)\]/)[1];
+			item.extra = item.extra.replace(/biblatexcitekey\[(.+)\]/, "");
+		}
+		if(!citekey) {
+			// create a unique citation key
+			citekey = buildCiteKey(item, citekeys);
+		}
+
+		// write citation key (removed the comma)
+		Zotero.write((first ? "" : "\n\n") + "@"+type+"{"+citekey);
+		first = false;
+
+		for(var field in fieldMap) {
+			if(item[fieldMap[field]]) {
+				writeField(field, item[fieldMap[field]]);
 			}
-        //biblatex recommends us to use mvbook for multi-volume books
-        if(type == "book" && item.volume) type = "mvbook"
-
-	if(!type) type = "misc";
-	
-
-        //If you want a custom citekey: just use
-        //"biblatexcitekey[mycitekey] in the Extra field
-        var citekey = "";
-        if (item.extra && item.extra.search(/biblatexcitekey\[.+\]/) != -1) {
-            citekey = item.extra.match(/biblatexcitekey\[(.+)\]/)[1];
-            item.extra = item.extra.replace(/biblatexcitekey\[(.+)\]/, "");
-        }
-	if(!citekey) {
-	    // create a unique citation key
-	    citekey = buildCiteKey(item, citekeys);
-	}
-
-	// write citation key (removed the comma)
-	Zotero.write((first ? "" : "\n\n") + "@"+type+"{"+citekey);
-	first = false;
-	
-	for(var field in fieldMap) {
-	    if(item[fieldMap[field]]) {
-		writeField(field, item[fieldMap[field]]);
-	    }
-	}
-
-	// Fields needing special treatment and not easily translatable via fieldMap
-	//e.g. where fieldname translation is dependent upon type, or special transformations
-	//has to be made
-
-	//all kinds of numbers
-	if(item.reportNumber || item.seriesNumber || item.patentNumber || item.billNumber || item.episodeNumber || item.number) {
-	    writeField("number", item.reportNumber || item.seriesNumber || item.patentNumber || item.billNumber || item.episodeNumber|| item.number);
-	}
-
-        //split numeric and nonnumeric issue specifications (for journals) into "number" and "issue"
-        if(item.issue) { //issue
-            var jnumber = parseInt(item.issue);
-            if(!isNaN(jnumber)) {
-                writeField("number", jnumber);
-            } else {
-                writeField("issue", item.issue);
-            }
-        }
-
-        //publicationTitles and special titles
-	if(item.publicationTitle) {
-	    if(item.itemType == "bookSection" || item.itemType == "conferencePaper" || item.itemType == "dictionaryEntry" || item.itemType == "encyclopediaArticle") {
-		writeField("booktitle", item.publicationTitle); 
-	    } else if (item.itemType == "magazineArticle" || item.itemType == "newspaperArticle"){
-                writeField("journaltitle", item.publicationTitle);
-	    } else if (item.itemType == "journalArticle") {
-                if(Zotero.getOption("useJournalAbbreviation")){
-		    writeField("journaltitle", item.journalAbbreviation);
-                } else {
-                    writeField("journaltitle", item.publicationTitle);
-                    writeField("shortjournal", item.journalAbbreviation);
-                }
-            }
-	}
-	
-	if(item.websiteTitle || item.forumTitle || item.blogTitle || item.programTitle) {
-	    writeField("titleaddon", item.websiteTitle || item.forumTitle || item.blogTitle || item.programTitle);
-	}
-	
-	
-        //publishers
-	if(item.publisher) {
-	    if(item.itemType == "thesis" || item.itemType =="report") {
-		writeField("institution", item.publisher);
-	    } else {
-		writeField("publisher", item.publisher);
-	    }
-	}
-	
-	//things concerning "type"
-	if(item.itemType == "letter"){
-	    if(item.letterType){
-		writeField("type",item.letterType);
-	    } else {
-		writeField("type","Letter"); //this isn't optimal, perhaps later versions of biblatex will add some suitable localization key
-	    }
-	} else if(item.itemType == "email"){
-	    writeField("type", "E-mail");
-	} else if(item.manuscriptType || item.thesisType || item.websiteType || item.presentationType || item.reportType || item.mapType) {
-	    writeField("type", item.manuscriptType || item.thesisType || item.websiteType || item.presentationType || item.reportType || item.mapType);
-	}
-
-	if(item.presentationType || item.manuscriptType){
-	    writeField("howpublished", item.presentationType || item.manuscriptType);
-	}
-
-	//case of specific eprint-archives in archive-fields
-	if(item.archive && item.archiveLocation) {
-	    if(item.archive == "arXiv" || item.archive == "arxiv") {
-		writeField("eprinttype", "arxiv");
-		writeField("eprint", item.archiveLocation);
-		if(item.callNumber) {//assume call number is used for arxiv class
-		    writeField("eprintclass", item.callNumber)
-		}
-	    } else if(item.archive = "JSTOR" || item.archive == "jstor") {
-		writeField("eprinttype", "jstor");
-		writeField("eprint", item.archiveLocation);
-	    } else if(item.archive = "PubMed" || item.archive == "pubmed") {
-		writeField("eprinttype", "pubmed");
-		writeField("eprint", item.archiveLocation);
-	    } else if(item.archive = "HDL" || item.archive == "hdl") {
-		writeField("eprinttype", "hdl");
-		writeField("eprint", item.archiveLocation);
-	    } else if(item.archive = "googlebooks" || item.archive == "Google Books") {
-		writeField("eprinttype", "googlebooks");
-		writeField("eprint", item.archiveLocation);
-	    }
-	}
-
-        //presentations have a meetingName field which we want to
-        //map to note
-        if (item.meetingName) {
-            write.Field("note", item.meetingName);
-            noteused = true;
-        }
-
-	
-	if(item.creators && item.creators.length) {
-	    // split creators into subcategories
-	    var author = "";
-	    var bookauthor = "";
-	    var commentator = "";
-	    var editor = "";
-	    var editora = "";
-	    var editorb = "";
-	    var holder = "";
-	    var translator = "";
-	    var noEscape = false;
-
-	    for each(var creator in item.creators) {
-		//var creatorString = creator.lastName;
-		
-		if (creator.firstName && creator.lastName) {
-		    creatorString = creator.lastName + ", " + creator.firstName;
-		//below to preserve possible corporate creators (biblatex 1.4a manual 2.3.3)
-		} else if (creator.fieldMode == true) { // fieldMode true, assume corporate author
-			creatorString = "{" + creator.lastName + "}";
-			noEscape = true;
 		}
 
-		if (creator.creatorType == "author" || creator.creatorType == "interviewer" || creator.creatorType == "director" || creator.creatorType == "programmer" || creator.creatorType == "artist" || creator.creatorType == "podcaster" || creator.creatorType == "presenter") {
-		    author += " and "+creatorString;
-		} else if (creator.creatorType == "bookAuthor") {
-		    bookauthor += " and "+creatorString;
-		} else if (creator.creatorType == "commenter") {
-		    commentator += " and "+creatorString;
-		} else if (creator.creatorType == "editor") {
-		    editor += " and "+creatorString;
-		} else if (creator.creatorType == "inventor") {
-		    holder += " and "+creatorString;
-		} else if (creator.creatorType == "translator") {
-		    translator += " and "+creatorString;
-		} else if (creator.creatorType == "seriesEditor") {//let's call them redacors
-			editorb += " and " + creatorString;
-		} else {// the rest into editora with editoratype = collaborator
-		    editora += " and "+creatorString;
+		// Fields needing special treatment and not easily translatable via fieldMap
+		//e.g. where fieldname translation is dependent upon type, or special transformations
+		//has to be made
+
+		//all kinds of numbers
+		if(item.reportNumber || item.seriesNumber || item.patentNumber || item.billNumber || item.episodeNumber || item.number) {
+			writeField("number", item.reportNumber || item.seriesNumber || item.patentNumber || item.billNumber || item.episodeNumber|| item.number);
 		}
-	    }
-	    
-	    //remove first " and " string
-	    if(author) {
-		writeField("author", author.substr(5), false, noEscape);
-	    }
-	    if(bookauthor) {
-		writeField("bookauthor", bookauthor.substr(5), false, noEscape);
-	    }
-	    if(commentator) {
-		writeField("commentator", commenter.substr(5), false, noEscape); 
-	    }
-	    if(editor) {
-		writeField("editor", editor.substr(5), false, noEscape);
-	    }
-	    if(editora) {
-		writeField("editora", editora.substr(5), false, noEscape);
-		writeField("editoratype", "collaborator");
-	    }
-	    if(editorb) {
-		writeField("editorb", editorb.substr(5), false, noEscape);
-		writeField("editorbtype", "redactor");
-	    }
-	    if(holder) {
-		writeField("holder", holder.substr(5), false, noEscape);
-	    }
-	    if(translator) {
-		writeField("translator", translator.substr(5), false, noEscape);
-	    }
-	}
 
-	if(item.accessDate){
-            writeField("urldate", Zotero.Utilities.strToISO(item.accessDate));
-        }
-
-	//TODO enable handling of date ranges when that's added to zotero
-	if(item.date) {
-	    writeField("date",Zotero.Utilities.strToISO(item.date));
-	}
-
-        //Map Languages to biblatex-field "langid" (used for
-        //hyphenation with a correct setting of the "autolang" option)
-        //if possible. See languageMap above for languagecodes to use
-        if(item.language) {
-            var lang = languageMap[item.language.slice(0,2)]
-            if (typeof lang == 'string' || lang instanceof String) {
-            //if there are no variants for this language
-                writeField("langid",lang);
-            } else if(typeof lang == 'object') {
-                var variant = lang[item.language.slice(3,5)];
-                if (variant) {
-                    writeField("langid",variant);
-                } else {
-                    writeField("langid",lang[""]); //use default variant
-                }
-
-            } else {
-                writeField("language","lang:" + item.language) // language field, which is sometimes written out by biblatex. FIXME: perhaps one should be able to use both langid and language in some way.
-            }
-        }
-	
-	
-	if(item.extra) {
-	    // this is for extracting fields not available in Zotero that one want's to use
-	    // in BibLaTex. Add the data in Zotero's 'extra' field e.g. like this and it
-	    // will be extracted:
-	    // biblatexdata[chapter=3;origyear=1909]
-	    if(item.extra.match("biblatexdata")){
-		var ex = item.extra.replace(/^.*biblatexdata\[|\].*$/g,"");
-		var blf = ex.split(";");
-		for each(var pair in blf){
-		    var ps=pair.split("=",2);
-		    writeField(ps[0],ps[1]);
+		//split numeric and nonnumeric issue specifications (for journals) into "number" and "issue"
+		if(item.issue) { //issue
+			var jnumber = parseInt(item.issue);
+			if(!isNaN(jnumber)) {
+				writeField("number", jnumber);
+			} else {
+				writeField("issue", item.issue);
+			}
 		}
-	    }
 
-            //if we still have data left and have not written
-            //anything else to note
-            if (item.extra != "" && !noteused) {
-		writeField("note", item.extra);
-	    }
-	}
-	
-	if(item.tags && item.tags.length) {
-	    var tagString = "";
-	    for each(var tag in item.tags) {
-		tagString += ", "+tag.tag;
-	    }
-	    writeField("keywords", tagString.substr(2));
-	}
-	
-	
-	if (item.notes && Zotero.getOption("exportNotes")) {
-	    for(var i in item.notes) {
-		var note = item.notes[i];
-		writeField("annotation", Zotero.Utilities.unescapeHTML(note["note"]));
-	    }
-	}
-	
-	if(item.attachments) {
-	    var attachmentString = "";
-	    
-	    for(var i in item.attachments) {
-		var attachment = item.attachments[i];
-		if(Zotero.getOption("exportFileData") && attachment.saveFile) {
-		    attachment.saveFile(attachment.defaultPath, true);
-		    attachmentString += ";" + attachment.title + ":" + attachment.defaultPath + ":" + attachment.mimeType;
-		} else if(attachment.localPath) {
-		    attachmentString += ";" + attachment.title + ":" + attachment.localPath + ":" + attachment.mimeType;
+		//publicationTitles and special titles
+		if(item.publicationTitle) {
+			if(item.itemType == "bookSection" || item.itemType == "conferencePaper" || item.itemType == "dictionaryEntry" || item.itemType == "encyclopediaArticle") {
+				writeField("booktitle", item.publicationTitle);
+			} else if (item.itemType == "magazineArticle" || item.itemType == "newspaperArticle"){
+				writeField("journaltitle", item.publicationTitle);
+			} else if (item.itemType == "journalArticle") {
+				if(Zotero.getOption("useJournalAbbreviation")){
+					writeField("journaltitle", item.journalAbbreviation);
+				} else {
+					writeField("journaltitle", item.publicationTitle);
+					writeField("shortjournal", item.journalAbbreviation);
+				}
+			}
 		}
-	    }
-	    
-	    if(attachmentString) {
-		writeField("file", attachmentString.substr(1));
-	    }
-	}
-	
-	Zotero.write("\n}");
+
+		if(item.websiteTitle || item.forumTitle || item.blogTitle || item.programTitle) {
+			writeField("titleaddon", item.websiteTitle || item.forumTitle || item.blogTitle || item.programTitle);
+		}
+
+
+		//publishers
+		if(item.publisher) {
+			if(item.itemType == "thesis" || item.itemType =="report") {
+				writeField("institution", item.publisher);
+			} else {
+				writeField("publisher", item.publisher);
+			}
+		}
+
+		//things concerning "type"
+		if(item.itemType == "letter"){
+			if(item.letterType){
+				writeField("type",item.letterType);
+			} else {
+				writeField("type","Letter"); //this isn't optimal, perhaps later versions of biblatex will add some suitable localization key
+			}
+		} else if(item.itemType == "email"){
+			writeField("type", "E-mail");
+		} else if(item.manuscriptType || item.thesisType || item.websiteType || item.presentationType || item.reportType || item.mapType) {
+			writeField("type", item.manuscriptType || item.thesisType || item.websiteType || item.presentationType || item.reportType || item.mapType);
+		}
+
+		if(item.presentationType || item.manuscriptType){
+			writeField("howpublished", item.presentationType || item.manuscriptType);
+		}
+
+		//case of specific eprint-archives in archive-fields
+		if(item.archive && item.archiveLocation) {
+			if(item.archive == "arXiv" || item.archive == "arxiv") {
+				writeField("eprinttype", "arxiv");
+				writeField("eprint", item.archiveLocation);
+				if(item.callNumber) {//assume call number is used for arxiv class
+					writeField("eprintclass", item.callNumber)
+				}
+			} else if(item.archive = "JSTOR" || item.archive == "jstor") {
+				writeField("eprinttype", "jstor");
+				writeField("eprint", item.archiveLocation);
+			} else if(item.archive = "PubMed" || item.archive == "pubmed") {
+				writeField("eprinttype", "pubmed");
+				writeField("eprint", item.archiveLocation);
+			} else if(item.archive = "HDL" || item.archive == "hdl") {
+				writeField("eprinttype", "hdl");
+				writeField("eprint", item.archiveLocation);
+			} else if(item.archive = "googlebooks" || item.archive == "Google Books") {
+				writeField("eprinttype", "googlebooks");
+				writeField("eprint", item.archiveLocation);
+			}
+		}
+
+		//presentations have a meetingName field which we want to
+		//map to note
+		if (item.meetingName) {
+			write.Field("note", item.meetingName);
+			noteused = true;
+		}
+
+
+		if(item.creators && item.creators.length) {
+			// split creators into subcategories
+			var author = "";
+			var bookauthor = "";
+			var commentator = "";
+			var editor = "";
+			var editora = "";
+			var editorb = "";
+			var holder = "";
+			var translator = "";
+			var noEscape = false;
+
+			for each(var creator in item.creators) {
+				//var creatorString = creator.lastName;
+
+				if (creator.firstName && creator.lastName) {
+					creatorString = creator.lastName + ", " + creator.firstName;
+					//below to preserve possible corporate creators (biblatex 1.4a manual 2.3.3)
+				} else if (creator.fieldMode == true) { // fieldMode true, assume corporate author
+					creatorString = "{" + creator.lastName + "}";
+					noEscape = true;
+				}
+
+				if (creator.creatorType == "author" || creator.creatorType == "interviewer" || creator.creatorType == "director" || creator.creatorType == "programmer" || creator.creatorType == "artist" || creator.creatorType == "podcaster" || creator.creatorType == "presenter") {
+					author += " and "+creatorString;
+				} else if (creator.creatorType == "bookAuthor") {
+					bookauthor += " and "+creatorString;
+				} else if (creator.creatorType == "commenter") {
+					commentator += " and "+creatorString;
+				} else if (creator.creatorType == "editor") {
+					editor += " and "+creatorString;
+				} else if (creator.creatorType == "inventor") {
+					holder += " and "+creatorString;
+				} else if (creator.creatorType == "translator") {
+					translator += " and "+creatorString;
+				} else if (creator.creatorType == "seriesEditor") {//let's call them redacors
+					editorb += " and " + creatorString;
+				} else {// the rest into editora with editoratype = collaborator
+					editora += " and "+creatorString;
+				}
+			}
+
+			//remove first " and " string
+			if(author) {
+				writeField("author", author.substr(5), false, noEscape);
+			}
+			if(bookauthor) {
+				writeField("bookauthor", bookauthor.substr(5), false, noEscape);
+			}
+			if(commentator) {
+				writeField("commentator", commenter.substr(5), false, noEscape);
+			}
+			if(editor) {
+				writeField("editor", editor.substr(5), false, noEscape);
+			}
+			if(editora) {
+				writeField("editora", editora.substr(5), false, noEscape);
+				writeField("editoratype", "collaborator");
+			}
+			if(editorb) {
+				writeField("editorb", editorb.substr(5), false, noEscape);
+				writeField("editorbtype", "redactor");
+			}
+			if(holder) {
+				writeField("holder", holder.substr(5), false, noEscape);
+			}
+			if(translator) {
+				writeField("translator", translator.substr(5), false, noEscape);
+			}
+		}
+
+		if(item.accessDate){
+			writeField("urldate", Zotero.Utilities.strToISO(item.accessDate));
+		}
+
+		//TODO enable handling of date ranges when that's added to zotero
+		if(item.date) {
+			writeField("date",Zotero.Utilities.strToISO(item.date));
+		}
+
+		//Map Languages to biblatex-field "langid" (used for
+		//hyphenation with a correct setting of the "autolang" option)
+		//if possible. See languageMap above for languagecodes to use
+		if(item.language) {
+			var lang = languageMap[item.language.slice(0,2)]
+			if (typeof lang == 'string' || lang instanceof String) {
+				//if there are no variants for this language
+				writeField("langid",lang);
+			} else if(typeof lang == 'object') {
+				var variant = lang[item.language.slice(3,5)];
+				if (variant) {
+					writeField("langid",variant);
+				} else {
+					writeField("langid",lang[""]); //use default variant
+				}
+
+			} else {
+				writeField("language","lang:" + item.language) // language field, which is sometimes written out by biblatex. FIXME: perhaps one should be able to use both langid and language in some way.
+			}
+		}
+
+
+		if(item.extra) {
+			// this is for extracting fields not available in Zotero that one want's to use
+			// in BibLaTex. Add the data in Zotero's 'extra' field e.g. like this and it
+			// will be extracted:
+			// biblatexdata[chapter=3;origyear=1909]
+			if(item.extra.match("biblatexdata")){
+				var ex = item.extra.replace(/^.*biblatexdata\[|\].*$/g,"");
+				var blf = ex.split(";");
+				for each(var pair in blf){
+					var ps=pair.split("=",2);
+					writeField(ps[0],ps[1]);
+				}
+			}
+
+			//if we still have data left and have not written
+			//anything else to note
+			if (item.extra != "" && !noteused) {
+				writeField("note", item.extra);
+			}
+		}
+
+		if(item.tags && item.tags.length) {
+			var tagString = "";
+			for each(var tag in item.tags) {
+				tagString += ", "+tag.tag;
+			}
+			writeField("keywords", tagString.substr(2));
+		}
+
+
+		if (item.notes && Zotero.getOption("exportNotes")) {
+			for(var i in item.notes) {
+				var note = item.notes[i];
+				writeField("annotation", Zotero.Utilities.unescapeHTML(note["note"]));
+			}
+		}
+
+		if(item.attachments) {
+			var attachmentString = "";
+
+			for(var i in item.attachments) {
+				var attachment = item.attachments[i];
+				if(Zotero.getOption("exportFileData") && attachment.saveFile) {
+					attachment.saveFile(attachment.defaultPath, true);
+					attachmentString += ";" + attachment.title + ":" + attachment.defaultPath + ":" + attachment.mimeType;
+				} else if(attachment.localPath) {
+					attachmentString += ";" + attachment.title + ":" + attachment.localPath + ":" + attachment.mimeType;
+				}
+			}
+
+			if(attachmentString) {
+				writeField("file", attachmentString.substr(1));
+			}
+		}
+
+		Zotero.write("\n}");
     }
 }
