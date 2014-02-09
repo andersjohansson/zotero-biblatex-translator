@@ -9,7 +9,7 @@ As of 2013-10-24 there is an official version of this translator included with Z
 
 ** Special features ("hacks")
 *** Recursive export of collections
-When exporting a collection, all items in subcollections are included as well. I really needed this feature but if you don't want it you only have to remove line 11: 
+When exporting a collection, all items in subcollections are included as well. This is also in the official translator and not really a hack but if you don't want it you only have to remove line 11: 
 #+BEGIN_SRC js
     "configOptions":{"getCollections":"true"},
 #+END_SRC
