@@ -15,34 +15,35 @@
 		"exportFileData": false,
 		"useJournalAbbreviation": false
 	},
-	"lastUpdated":"2013-11-30 18:13"
+	"lastUpdated":"2014-02-09 20:36"
 }
 
-//%a = first author surname
+
+//%a = first listed creator surname
 //%y = year
 //%t = first word of title
 var citeKeyFormat = "%a_%t_%y";
 
 
 var fieldMap = {
-	location:"place",
-	chapter:"chapter",
-	edition:"edition",
-    title:"title",
-    volume:"volume",
-    rights:"rights", //it's rights in zotero nowadays
-    isbn:"ISBN",
-    issn:"ISSN",
-	url:"url",
-    doi:"DOI",
-	series:"series",
-    shorttitle:"shortTitle",
-    abstract:"abstractNote",
-    volumes:"numberOfVolumes",
-    version:"version",
-    eventtitle:"conferenceName",
-    pages:"pages",
-    pagetotal:"numPages"
+	location: "place",
+	chapter: "chapter",
+	edition: "edition",
+	title: "title",
+	volume: "volume",
+	rights: "rights", //it's rights in zotero nowadays
+	isbn: "ISBN",
+	issn: "ISSN",
+	url: "url",
+	doi: "DOI",
+	series: "series",
+	shorttitle: "shortTitle",
+	abstract: "abstractNote",
+	volumes: "numberOfVolumes",
+	version: "version",
+	eventtitle: "conferenceName",
+	pages: "pages",
+	pagetotal: "numPages"
 };
 //more conversions done below with special rules
 
@@ -52,95 +53,158 @@ var fieldMap = {
 
 
 var zotero2biblatexTypeMap = {
-	"book":"book",
-	"bookSection":"inbook",
-	"journalArticle":"article",
-	"magazineArticle":"article",
-	"newspaperArticle":"article",
-	"thesis":"thesis",
-	"letter":"letter",
-	"manuscript":"unpublished",
-	"interview":"misc",
-	"film":"movie",
-	"artwork":"artwork",
-	"webpage":"online",
-	"conferencePaper":"inproceedings",
-	"report":"report",
-	"bill":"legislation",
-	"case":"jurisdiction",
-	"hearing":"jurisdiction",
-	"patent":"patent",
-	"statute":"legislation",
-	"email":"letter",
-	"map":"misc",
-	"blogPost":"online",
-	"instantMessage":"misc",
-	"forumPost":"online",
-	"audioRecording":"audio",
-	"presentation":"unpublished",
-	"videoRecording":"video",
-	"tvBroadcast":"misc",
-	"radioBroadcast":"misc",
-	"podcast":"audio",
-	"computerProgram":"software",
-	"document":"misc",
-	"encyclopediaArticle":"inreference",
-	"dictionaryEntry":"inreference"
+	"book": "book",
+	"bookSection": "incollection",
+	"journalArticle": "article",
+	"magazineArticle": "article",
+	"newspaperArticle": "article",
+	"thesis": "thesis",
+	"letter": "letter",
+	"manuscript": "unpublished",
+	"interview": "misc",
+	"film": "movie",
+	"artwork": "artwork",
+	"webpage": "online",
+	"conferencePaper": "inproceedings",
+	"report": "report",
+	"bill": "legislation",
+	"case": "jurisdiction",
+	"hearing": "jurisdiction",
+	"patent": "patent",
+	"statute": "legislation",
+	"email": "letter",
+	"map": "misc",
+	"blogPost": "online",
+	"instantMessage": "misc",
+	"forumPost": "online",
+	"audioRecording": "audio",
+	"presentation": "unpublished",
+	"videoRecording": "video",
+	"tvBroadcast": "misc",
+	"radioBroadcast": "misc",
+	"podcast": "audio",
+	"computerProgram": "software",
+	"document": "misc",
+	"encyclopediaArticle": "inreference",
+	"dictionaryEntry": "inreference"
 };
 
 
 var alwaysMap = {
-	"|":"{\\textbar}",
-	"<":"{\\textless}",
-	">":"{\\textgreater}",
-	"~":"{\\textasciitilde}",
-	"^":"{\\textasciicircum}",
-	"\\":"{\\textbackslash}",
-	"{" : "\\{",
-	"}" : "\\}"
+	"|": "{\\textbar}",
+	"<": "{\\textless}",
+	">": "{\\textgreater}",
+	"~": "{\\textasciitilde}",
+	"^": "{\\textasciicircum}",
+	"\\": "{\\textbackslash}",
+	"{": "\\{",
+	"}": "\\}"
 };
 
 
-//to map ISO language codes to babel/polyglossia language codes used
-//in biblates.
-//from list of supported languages in biblatex 2.8
-var languageMap = {
-	"ca":"catalan",
-	"hr":"croatian",
-	"cz":"czech",
-	"da":"danish",
-	"nl":"dutch",
-	"en":{""  :"english", //same as american
-	      "US":"american",
-	      "GB":"british",
-	      "CA":"canadian",
-	      "AU":"australian",
-	      "NZ":"newzealand"},
-	"fi":"finnish",
-	"fr":"french",
-	"de":{""  :"german",
-	      "AT":"austrian"},
-	//	"de":"ngerman", //FIXME: should ngerman be available via some hack?
-	//	"de-AT":"naustrian", //FIXME: same problem here
-	"el":"greek",
-	"it":"italian",
-	"nn":"norwegian",
-	"pl":"polish",
-	"pt-BR":"brazil",
-	"pt-PT":"portugese",
-	"pt":{""  :"portuguese",
-	      "PT":"portuguese",
-	      "BR":"brazil"},
-	"ru":"russian",
-	"es":"spanish",
-	"sv":"swedish",
+//to map ISO language codes (tries to follow IETF RFC5646) to babel
+//language codes used in biblatex. Taken from Babel manual 3.9h.
+var babelLanguageMap = {
+	"af": "afrikaans",
+	"ar": "arabic",
+	//bahasa (see malay and indonesian)
+	"eu": "basque",
+	"br": "breton",
+	"bg": "bulgarian",
+	"ca": "catalan",
+	"hr": "croatian",
+	"cz": "czech",
+	"da": "danish",
+	"nl": "dutch",
+	"en": {
+		"": "english", //same as american
+		"US": "american",
+		"GB": "british",
+		"CA": "canadian",
+		"AU": "australian",
+		"NZ": "newzealand"
+	},
+	"eo": "esperanto",
+	"et": "estonian",
+	//ethiop (package for many languages)
+	"fa": "farsi",
+	"fi": "finnish",
+	"fr": {
+		"": "french",
+		"CA": "canadien"
+		//frenchle (a special package)
+	},
+	"fur": "friulan",
+	"gl": "galician",
+	"de": {
+		"": "german",
+		"AT": "austrian",
+		"DE-1996": "ngerman", //these are valid IETF language codes
+		"AT-1996": "naustrian",
+		"1996": "ngerman"
+	},
+	"el": {
+		"": "greek",
+		"polyton": "polutonikogreek"
+	},
+	"he": "hebrew",
+	"hi": "hindi",
+	"is": "icelandic",
+	"id": "indonesian", //aliases: bahasai, indon
+	"ia": "interlingua",
+	"ga": "irish",
+	"it": "italian",
+	"ja": "japanese",
+	"la": "latin",
+	"lv": "latvian",
+	"lt": "lithuanian",
+	"dsb": "lowersorbian",
+	"hu": "magyar",
+	"zlm": "malay", //aliases: bahasam, melayu (currently, there's no
+	//real difference between bahasam and bahasai in babel)
+	"mn": "mongolian",
+	"se": "samin",
+	"nn": "nynorsk", //nynorsk
+	"nb": "norsk", //bokmål
+	"no": "norwegian", //"no" could be used, norwegian is an alias for "norsk" in babel
+	"zh": {
+		"": "pinyin", //only supported chinese in babel is the romanization pinyin?
+		"Latn": "pinyin"
+	},
+	"pl": "polish",
+	"pt": {
+		"": "portuguese",
+		"PT": "portuguese",
+		"BR": "brazil"
+	},
+	"ro": "romanian",
+	"rm": "romansh",
+	"ru": "russian",
+	"gd": "scottish",
+	"sr": {
+		"": "serbian", //latin script as default?
+		"Cyrl": "serbianc",
+		"Latn": "serbian",
+	},
+	"sk": "slovak",
+	"sl": "slovene",
+	//spanglish (pseudo language)
+	"es": "spanish",
+	"sv": "swedish",
+	"th": "thaicjk", //thaicjk preferred?
+	"tr": "turkish",
+	"tk": "turkmen",
+	"uk": "ukrainian",
+	"hsb": "uppersorbian",
+	"vi": "vietnamese",
+	"cy": "welsh",
 };
 
 
 // some fields are, in fact, macros.  If that is the case then we should not put the
 // data in the braces as it will cause the macros to not expand properly
 function writeField(field, value, isMacro, noEscape) {
-	if(!value && typeof value != "number") return;
+	if (!value && typeof value != "number") return;
 	value = value + ""; // convert integers to strings
 	Zotero.write(",\n\t" + field + " = ");
 	if (!isMacro) Zotero.write("{");
@@ -171,9 +235,9 @@ function writeField(field, value, isMacro, noEscape) {
 	if (!isMacro) Zotero.write("}");
 }
 
-function mapHTMLmarkup(characters){
+function mapHTMLmarkup(characters) {
 	//converts the HTML markup allowed in Zotero for rich text to TeX
-	//since	 < and > have already been escaped, we need this rather hideous code - I couldn't see a way around it though.
+	//since  < and > have already been escaped, we need this rather hideous code - I couldn't see a way around it though.
 	//italics and bold
 	characters = characters.replace(/\{\\textless\}i\{\\textgreater\}(((?!\{\\textless\}\/i{\\textgreater\}).)+)\{\\textless\}\/i{\\textgreater\}/, "\\textit{$1}").replace(/\{\\textless\}b\{\\textgreater\}(((?!\{\\textless\}\/b{\\textgreater\}).)+)\{\\textless\}\/b{\\textgreater\}/g, "\\textbf{$1}");
 	//sub and superscript
@@ -195,7 +259,7 @@ function mapEscape(character) {
 // escaping, but we do want to preserve the base characters
 
 function tidyAccents(s) {
-	var r=s.toLowerCase();
+	var r = s.toLowerCase();
 
 	// XXX Remove conditional when we drop Zotero 2.1.x support
 	// This is supported in Zotero 3.0 and higher
@@ -203,19 +267,19 @@ function tidyAccents(s) {
 		r = ZU.removeDiacritics(r, true);
 	else {
 		// We fall back on the replacement list we used previously
-		r = r.replace(new RegExp("[ä]", 'g'),"ae");
-		r = r.replace(new RegExp("[ö]", 'g'),"oe");
-		r = r.replace(new RegExp("[ü]", 'g'),"ue");
-		r = r.replace(new RegExp("[àáâãå]", 'g'),"a");
-		r = r.replace(new RegExp("æ", 'g'),"ae");
-		r = r.replace(new RegExp("ç", 'g'),"c");
-		r = r.replace(new RegExp("[èéêë]", 'g'),"e");
-		r = r.replace(new RegExp("[ìíîï]", 'g'),"i");
-		r = r.replace(new RegExp("ñ", 'g'),"n");
-		r = r.replace(new RegExp("[òóôõ]", 'g'),"o");
-		r = r.replace(new RegExp("œ", 'g'),"oe");
-		r = r.replace(new RegExp("[ùúû]", 'g'),"u");
-		r = r.replace(new RegExp("[ýÿ]", 'g'),"y");
+		r = r.replace(new RegExp("[ä]", 'g'), "ae");
+		r = r.replace(new RegExp("[ö]", 'g'), "oe");
+		r = r.replace(new RegExp("[ü]", 'g'), "ue");
+		r = r.replace(new RegExp("[àáâãå]", 'g'), "a");
+		r = r.replace(new RegExp("æ", 'g'), "ae");
+		r = r.replace(new RegExp("ç", 'g'), "c");
+		r = r.replace(new RegExp("[èéêë]", 'g'), "e");
+		r = r.replace(new RegExp("[ìíîï]", 'g'), "i");
+		r = r.replace(new RegExp("ñ", 'g'), "n");
+		r = r.replace(new RegExp("[òóôõ]", 'g'), "o");
+		r = r.replace(new RegExp("œ", 'g'), "oe");
+		r = r.replace(new RegExp("[ùúû]", 'g'), "u");
+		r = r.replace(new RegExp("[ýÿ]", 'g'), "y");
 	}
 
 	return r;
@@ -231,22 +295,22 @@ var citeKeyConversionsRe = /%([a-zA-Z])/;
 var citeKeyCleanRe = /[^a-z0-9\!\$\&\*\+\-\.\/\:\;\<\>\?\[\]\^\_\`\|]+/g;
 
 var citeKeyConversions = {
-	"a":function (flags, item) {
-		if(item.creators && item.creators[0] && item.creators[0].lastName) {
-			return item.creators[0].lastName.toLowerCase().replace(/ /g,"_").replace(/,/g,"");
+	"a": function (flags, item) {
+		if (item.creators && item.creators[0] && item.creators[0].lastName) {
+			return item.creators[0].lastName.toLowerCase().replace(/ /g, "_").replace(/,/g, "");
 		}
 		return "";
 	},
-	"t":function (flags, item) {
+	"t": function (flags, item) {
 		if (item["title"]) {
 			return item["title"].toLowerCase().replace(citeKeyTitleBannedRe, "").split(/\s+/g)[0];
 		}
 		return "";
 	},
-	"y":function (flags, item) {
-		if(item.date) {
+	"y": function (flags, item) {
+		if (item.date) {
 			var date = Zotero.Utilities.strToDate(item.date);
-			if(date.year && numberRe.test(date.year)) {
+			if (date.year && numberRe.test(date.year)) {
 				return date.year;
 			}
 		}
@@ -254,6 +318,18 @@ var citeKeyConversions = {
 	}
 }
 
+//checks whether an item contains any creator of type ctype
+function creatorCheck(item, ctype) {
+	if (item.creators && item.creators.length) {
+		for each(var creator in item.creators) {
+			if (creator.creatorType == ctype) {
+				return true; //found a ctype creator
+			}
+		}
+	}
+	//didn't find any ctype creator (or no creators at all)
+	return false;
+}
 
 function buildCiteKey (item,citekeys) {
     var basekey = "";
@@ -308,7 +384,7 @@ function doExport() {
     //Zotero.write("% biblatex export generated by Zotero "+Zotero.Utilities.getVersion());
     // to make sure the BOM gets ignored
     Zotero.write("\n");
-    Zotero.write("% This is a file in the format of BibLaTeX (http://www.ctan.org/pkg/biblatex), using features unsupported by standard BibTeX, and generated with the BibLaTeX translator of Zotero " + Zotero.Utilities.getVersion() + "\n\n");
+    Zotero.write("% This is a file in the format of BibLaTeX (http://www.ctan.org/pkg/biblatex), using features unsupported by standard BibTeX, and generated with the BibLaTeX-with-hacks translator of Zotero " + Zotero.Utilities.getVersion() + "\n\n");
 
     var first = true;
     var citekeys = new Object();
@@ -319,12 +395,21 @@ function doExport() {
 
 		var noteused = false; //a switch for keeping track whether the
 		//field "note" has been written to
-
 		// determine type
 		var type = zotero2biblatexTypeMap[item.itemType];
 		if (typeof (type) == "function") {
 			type = type(item);
 		}
+
+		//inbook is reasonable at times, using a bookauthor should
+		//indicate this
+		if(item.itemType == "bookSection" &&
+		   creatorCheck(item, "bookAuthor")) type = "inbook";
+
+		//a book without author but with editors is a collection
+		if(item.itemType == "book" && !creatorCheck(item,"author") &&
+		   creatorCheck(item, "editor")) type = "collection";
+
 		//biblatex recommends us to use mvbook for multi-volume books
 		if(type == "book" && item.volume) type = "mvbook"
 
@@ -344,7 +429,7 @@ function doExport() {
 		}
 
 		// write citation key (removed the comma)
-		Zotero.write((first ? "" : "\n\n") + "@"+type+"{"+citekey);
+		Zotero.write((first ? "" : "\n\n") + "@" + type + "{" + citekey);
 		first = false;
 
 		for(var field in fieldMap) {
@@ -411,7 +496,10 @@ function doExport() {
 			}
 		} else if(item.itemType == "email"){
 			writeField("type", "E-mail");
-		} else if(item.manuscriptType || item.thesisType || item.websiteType || item.presentationType || item.reportType || item.mapType) {
+		} else if (item.itemType == "thesis" &&
+				   (!item.thesisType || item.thesisType.search(/ph\.?d/i) != -1)) {
+			writeField("type", "phdthesis");
+		} else if (item.manuscriptType || item.thesisType || item.websiteType || item.presentationType || item.reportType || item.mapType) {
 			writeField("type", item.manuscriptType || item.thesisType || item.websiteType || item.presentationType || item.reportType || item.mapType);
 		}
 
@@ -445,7 +533,7 @@ function doExport() {
 		//presentations have a meetingName field which we want to
 		//map to note
 		if (item.meetingName) {
-			write.Field("note", item.meetingName);
+			writeField("note", item.meetingName);
 			noteused = true;
 		}
 
@@ -463,13 +551,13 @@ function doExport() {
 			var noEscape = false;
 
 			for each(var creator in item.creators) {
-				//var creatorString = creator.lastName;
+				var creatorString = creator.lastName;
 
 				if (creator.firstName && creator.lastName) {
 					creatorString = creator.lastName + ", " + creator.firstName;
 					//below to preserve possible corporate creators (biblatex 1.4a manual 2.3.3)
 				} else if (creator.fieldMode == true) { // fieldMode true, assume corporate author
-					creatorString = "{" + creator.lastName + "}";
+					creatorString = "{" + creatorString + "}";
 					noEscape = true;
 				}
 
@@ -532,22 +620,22 @@ function doExport() {
 
 		//Map Languages to biblatex-field "langid" (used for
 		//hyphenation with a correct setting of the "autolang" option)
-		//if possible. See languageMap above for languagecodes to use
-		if(item.language) {
-			var lang = languageMap[item.language.slice(0,2)]
-			if (typeof lang == 'string' || lang instanceof String) {
-				//if there are no variants for this language
-				writeField("langid",lang);
-			} else if(typeof lang == 'object') {
-				var variant = lang[item.language.slice(3,5)];
-				if (variant) {
-					writeField("langid",variant);
-				} else {
-					writeField("langid",lang[""]); //use default variant
+		//if possible. See babelLanguageMap above for languagecodes to use
+		if (item.language) {
+			var langcode = item.language.match(/^([a-z]{2,3})(?:[^a-z](.+))?$/i); //not too strict
+			if(langcode && typeof langcode[1] !== 'undefined'){
+				var lang = babelLanguageMap[langcode[1]];
+				if (typeof lang == 'string' || lang instanceof String) {
+					//if there are no variants for this language
+					writeField("langid", lang);
+				} else if (typeof lang == 'object') {
+					var variant = lang[langcode[2]];
+					if (variant) {
+						writeField("langid", variant);
+					} else {
+						writeField("langid", lang[""]); //use default variant
+					}
 				}
-
-			} else {
-				writeField("language","lang:" + item.language) // language field, which is sometimes written out by biblatex. FIXME: perhaps one should be able to use both langid and language in some way.
 			}
 		}
 
