@@ -15,7 +15,7 @@
 		"exportFileData": false,
 		"useJournalAbbreviation": false
 	},
-	"lastUpdated":"2014-02-09 20:36"
+	"lastUpdated":"2014-02-16 14:19"
 }
 
 
@@ -321,8 +321,8 @@ var citeKeyConversions = {
 //checks whether an item contains any creator of type ctype
 function creatorCheck(item, ctype) {
 	if (item.creators && item.creators.length) {
-		for each(var creator in item.creators) {
-			if (creator.creatorType == ctype) {
+		for (var i=0; i<item.creators.length; i++) {
+			if (item.creators[i].creatorType == ctype) {
 				return true; //found a ctype creator
 			}
 		}
@@ -550,7 +550,8 @@ function doExport() {
 			var translator = "";
 			var noEscape = false;
 
-			for each(var creator in item.creators) {
+			for (var i=0; i<item.creators.length; i++) {
+				var creator = item.creators[i];
 				var creatorString = creator.lastName;
 
 				if (creator.firstName && creator.lastName) {
@@ -623,9 +624,9 @@ function doExport() {
 		//if possible. See babelLanguageMap above for languagecodes to use
 		if (item.language) {
 			var langcode = item.language.match(/^([a-z]{2,3})(?:[^a-z](.+))?$/i); //not too strict
-			if(langcode && typeof langcode[1] !== 'undefined'){
+			if(langcode){
 				var lang = babelLanguageMap[langcode[1]];
-				if (typeof lang == 'string' || lang instanceof String) {
+				if (typeof lang == 'string') {
 					//if there are no variants for this language
 					writeField("langid", lang);
 				} else if (typeof lang == 'object') {
@@ -663,15 +664,15 @@ function doExport() {
 
 		if(item.tags && item.tags.length) {
 			var tagString = "";
-			for each(var tag in item.tags) {
-				tagString += ", "+tag.tag;
+			for (var i=0; i<item.tags.length; i++) {
+				tagString += ", " + item.tags[i].tag;
 			}
 			writeField("keywords", tagString.substr(2));
 		}
 
 
 		if (item.notes && Zotero.getOption("exportNotes")) {
-			for(var i in item.notes) {
+			for (var i=0; i<item.notes.length; i++) {
 				var note = item.notes[i];
 				writeField("annotation", Zotero.Utilities.unescapeHTML(note["note"]));
 			}
@@ -680,7 +681,7 @@ function doExport() {
 		if(item.attachments) {
 			var attachmentString = "";
 
-			for(var i in item.attachments) {
+			for (var i=0; i<item.attachments.length; i++) {
 				var attachment = item.attachments[i];
 				if(Zotero.getOption("exportFileData") && attachment.saveFile) {
 					attachment.saveFile(attachment.defaultPath, true);
