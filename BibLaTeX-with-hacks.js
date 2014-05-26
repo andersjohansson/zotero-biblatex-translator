@@ -646,11 +646,12 @@ function doExport() {
 			// in BibLaTex. Add the data in Zotero's 'extra' field e.g. like this and it
 			// will be extracted:
 			// biblatexdata[chapter=3;origyear=1909]
-			if(item.extra.match("biblatexdata")){
-				var ex = item.extra.replace(/^.*biblatexdata\[|\].*$/g,"");
+			var ex = item.extra.match(/biblatexdata\[(.+)\]/)[1];
+			if(ex){
+				item.extra = item.extra.replace(/biblatexdata\[.+\]/, "");
 				var blf = ex.split(";");
-				for each(var pair in blf){
-					var ps=pair.split("=",2);
+				for (var i=0; i<blf.length; i++) {
+					var ps=blf[i].split("=",2);
 					writeField(ps[0],ps[1]);
 				}
 			}
