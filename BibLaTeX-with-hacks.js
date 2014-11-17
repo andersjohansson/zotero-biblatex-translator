@@ -15,7 +15,7 @@
 		"exportFileData": false,
 		"useJournalAbbreviation": false
 	},
-	"lastUpdated":"2014-11-16 23:40"
+	"lastUpdated":"2014-11-17 00:36"
 }
 
 
@@ -480,9 +480,9 @@ function doExport() {
 		//If you want a custom citekey: just use
 		//"biblatexcitekey[mycitekey] in the Extra field
 		var citekey = "";
-		if (item.extra && item.extra.search(/biblatexcitekey\[.+\]/) != -1) {
-			citekey = item.extra.match(/biblatexcitekey\[(.+)\]/)[1];
-			item.extra = item.extra.replace(/biblatexcitekey\[(.+)\]/, "");
+		if (item.extra && item.extra.search(/biblatexcitekey\[[^\]]+\]/) != -1) {
+			citekey = item.extra.match(/biblatexcitekey\[([^\]]+)\]/)[1];
+			item.extra = item.extra.replace(/biblatexcitekey\[([^\]]+)\]/, "");
 		}
 		if(!citekey) {
 			// create a unique citation key
@@ -716,9 +716,9 @@ function doExport() {
 			// in BibLaTex. Add the data in Zotero's 'extra' field e.g. like this and it
 			// will be extracted:
 			// biblatexdata[chapter=3;origyear=1909]
-			var ex = item.extra.match(/biblatexdata\[(.+)\]/)[1];
-			if(ex){
-				item.extra = item.extra.replace(/biblatexdata\[.+\]/, "");
+			if(/biblatexdata\[[^\]]+\]/.test(item.extra)){
+				var ex = item.extra.match(/biblatexdata\[([^\]]+)\]/)[1];
+				item.extra = item.extra.replace(/biblatexdata\[[^\]]+\]/, "");
 				var blf = ex.split(";");
 				for (var i=0; i<blf.length; i++) {
 					var ps=blf[i].split("=",2);
