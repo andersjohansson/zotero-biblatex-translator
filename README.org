@@ -2,6 +2,8 @@
 This is an export (only) translator adapted from the standard BibTeX translator of Zotero ([[https://github.com/zotero/translators][available here on github]]). It aims to map item types and item fields as correctly as possible from Zotero to the extended .bib-format of [[http://www.ctan.org/pkg/biblatex][BibLaTeX]]. It also contains some [[#special-features][special features, see below]].
 
 ** Only use this version if you need the "special features"!
+*And if you do, you would probably also be better off using [[https://zotplus.github.io/zotero-better-bibtex/][Better Bib(la)Tex]] which has incorporated all these features and much more.*
+
 As of 2013-10-24 there is an official version of this translator included with Zotero. This version should then only be used if you need the "special features" below. The name of this translator in the translator dialog is "BibLaTeX-with-hacks" to distinguish it from the official version.
 
 ** Installation
